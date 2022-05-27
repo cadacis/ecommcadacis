@@ -45,7 +45,7 @@ const NotLogged = () => {
       </Menu>
 
       <Button sx={{ borderRadius: 12 }} variant="text" color="white">
-        <Icon icon="carbon:search" color="white" width="35" height="35" />
+        <Icon icon="carbon:search" color="white" width="25" height="25" />
       </Button>
       <Button
         onClick={handleCart}
@@ -53,7 +53,7 @@ const NotLogged = () => {
         variant="text"
         color="white">
         <Badge color="secondary" badgeContent={0} showZero>
-          <Icon icon="mdi-light:cart" color="white" width="35" height="35" />
+          <Icon icon="mdi-light:cart" color="white" width="25" height="25" />
         </Badge>
       </Button>
       <Button
@@ -61,7 +61,7 @@ const NotLogged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Icon icon="carbon:login" color="white" width="35" height="35" />
+        <Icon icon="carbon:login" color="white" width="25" height="25" />
       </Button>
     </Box>
   );

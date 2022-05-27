@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 const Index = () => {
-  var fontType = 'body1';
   var menu = [
     { title: 'Home', link: '/' },
     { title: 'Most Popular', link: '/' },
@@ -14,12 +13,12 @@ const Index = () => {
 
   return (
     <div>
-      <Box sx={{ pt: 0.5 }}>
+      <Box>
         <ButtonGroup variant="text" color="primary" aria-label="">
           {menu.map((item, key) => {
             return (
               <Button key={key} color="white" link={item.link}>
-                <Typography variant={fontType} color="white">
+                <Typography fontSize={'15px'} variant={'body1'} color="white">
                   {item.title}
                 </Typography>
               </Button>
