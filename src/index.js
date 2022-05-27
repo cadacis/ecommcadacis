@@ -5,14 +5,17 @@ import { store } from './app/store';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import './index.css';
-
+import { themeOne } from "./Theme/themes";
+import { ThemeProvider } from '@mui/material/styles';
 const container = document.getElementById('root');
 const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <App />
+        <ThemeProvider theme={themeOne}>
+          <App />
+        </ThemeProvider>
     </Provider>
   </React.StrictMode>
 );
