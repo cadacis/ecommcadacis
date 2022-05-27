@@ -10,7 +10,7 @@ const Index = () => {
                             <Button>1</Button>
                             <Button>2</Button>
                             <Button>1</Button>
-                            <Button>2</Button>
+                            <Button>23</Button>
               </ButtonGroup>
             </Box>
       
