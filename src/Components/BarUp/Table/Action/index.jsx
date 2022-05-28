@@ -1,11 +1,14 @@
 import React from 'react';
+import IsLogged from './logged';
+import NotLogged from './notLogged';
 
 const Index = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-}
+  //Verificar el estado aqui y devolver logged status
+  var isLogged = true;
+  if (!isLogged) {
+    return <NotLogged />;
+  }
+  return <IsLogged />;
+};
 
 export default Index;
