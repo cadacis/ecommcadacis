@@ -17,6 +17,9 @@ const themeOne = createTheme({
         white: {
           main: "#ffffff",
         },
+        default: {
+          main: "#ffffff",
+        },
         black: {
             main: "#000000",
           },

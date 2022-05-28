@@ -6,7 +6,8 @@ import Typography from '@mui/material/Typography';
 const Index = () => {
   var menu = [
     { title: 'Home', link: '/' },
-    { title: 'Most Popular', link: '/' },
+    { title: 'Shop', link: '/' },
+
     { title: 'Best Seller', link: '/' },
     { title: 'About Us', link: '/' },
   ];
