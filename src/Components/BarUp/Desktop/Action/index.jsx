@@ -4,7 +4,7 @@ import NotLogged from './notLogged';
 
 const Index = () => {
   //Verificar el estado aqui y devolver logged status
-  var isLogged = true;
+  var isLogged = false;
   if (!isLogged) {
     return <NotLogged />;
   }

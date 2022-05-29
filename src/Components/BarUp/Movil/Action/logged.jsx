@@ -24,6 +24,7 @@ const Logged = () => {
   ];
   const [menu, setMenu] = React.useState(false);
   const [cart, setCart] = React.useState(false);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = open ? 'cart-popover' : undefined;
@@ -60,7 +61,7 @@ const Logged = () => {
       <Menu
         sx={{ mt: '45px' }}
         id="menu-appbar"
-        /*  anchorEl={cart} */
+        anchorEl={cart}
         anchorOrigin={{
           vertical: 'top',
           horizontal: 'right',

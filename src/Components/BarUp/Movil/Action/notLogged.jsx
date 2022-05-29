@@ -6,6 +6,7 @@ import Badge from '@mui/material/Badge';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
+import Login from '../../../Login';
 const NotLogged = () => {
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);
@@ -16,17 +17,16 @@ const NotLogged = () => {
   const handleSearchDialog = () => {
     setSearchDialog(!searchDialog);
   };
+
   const handleCart = () => {
     setCart(!cart);
   };
   return (
-    <Box>
+    <Box sx={{ mt: 0.5 }}>
       {/*Cuadro de login*/}
       <Dialog onClose={handleLoginDialog} open={loginDialog}>
         {/*Dialogo for login*/}
-        <Typography variant="h1" color="initial">
-          Login Form Here
-        </Typography>
+        <Login handleCloseDialog={handleLoginDialog} />
       </Dialog>
       {/*Cuadro de Busqueda*/}
       <Dialog onClose={handleSearchDialog} open={searchDialog}>
@@ -62,7 +62,7 @@ const NotLogged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Icon icon="carbon:search" color="white" width="25" height="25" />
+        <Icon icon="carbon:search" color="white" width="35" height="35" />
       </Button>
       <Button
         onClick={handleCart}
@@ -70,7 +70,7 @@ const NotLogged = () => {
         variant="text"
         color="white">
         <Badge color="secondary" badgeContent={0} showZero>
-          <Icon icon="mdi-light:cart" color="white" width="25" height="25" />
+          <Icon icon="mdi-light:cart" color="white" width="35" height="35" />
         </Badge>
       </Button>
       <Button
@@ -78,7 +78,7 @@ const NotLogged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Icon icon="carbon:login" color="white" width="25" height="25" />
+        <Icon icon="carbon:login" color="white" width="35" height="35" />
       </Button>
     </Box>
   );
