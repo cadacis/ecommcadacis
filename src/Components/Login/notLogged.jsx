@@ -67,7 +67,7 @@ const NotLogged = (props) => {
       textAlign={'center'}
       sx={{ p: 1 }}
       minHeight={'250px'}
-      minWidth={'300px'}>
+      minWidth={'50px'}>
       <Box>
         <Icon
           icon="fluent:inprivate-account-28-filled"

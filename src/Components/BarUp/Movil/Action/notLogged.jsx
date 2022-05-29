@@ -22,7 +22,12 @@ const NotLogged = () => {
     setCart(!cart);
   };
   return (
-    <Box sx={{ mt: 0.5 }}>
+    <Box
+      display={'flex'}
+      justifyContent="center"
+      justifyItems={'center'}
+      height={'100%'}
+      sx={{ mt: 0.5 }}>
       {/*Cuadro de login*/}
       <Dialog onClose={handleLoginDialog} open={loginDialog}>
         {/*Dialogo for login*/}
@@ -57,20 +62,20 @@ const NotLogged = () => {
         </Box>
       </Menu>
 
-      <Button
+      {/*   <Button
         onClick={handleSearchDialog}
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
         <Icon icon="carbon:search" color="white" width="35" height="35" />
-      </Button>
+      </Button>*/}
       <Button
         onClick={handleCart}
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
         <Badge color="secondary" badgeContent={0} showZero>
-          <Icon icon="mdi-light:cart" color="white" width="35" height="35" />
+          <Icon icon="mdi-light:cart" color="white" width="30" height="30" />
         </Badge>
       </Button>
       <Button
@@ -78,7 +83,7 @@ const NotLogged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Icon icon="carbon:login" color="white" width="35" height="35" />
+        <Icon icon="carbon:login" color="white" width="30" height="30" />
       </Button>
     </Box>
   );

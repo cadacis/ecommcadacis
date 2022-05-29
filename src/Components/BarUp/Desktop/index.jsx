@@ -11,7 +11,11 @@ const Index = () => {
         <Box>
           <Logo />
         </Box>
-        <Box flexGrow={1}>
+        <Box
+          display={'flex'}
+          justifyContent="center"
+          justifyItems={'center'}
+          flexGrow={1}>
           <Menu />
         </Box>
         <Box>

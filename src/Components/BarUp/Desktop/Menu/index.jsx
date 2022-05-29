@@ -7,7 +7,11 @@ import pagesMenu from '../../pages';
 const Index = () => {
   return (
     <div>
-      <Box>
+      <Box
+        display={'flex'}
+        flexDirection="column"
+        justifyContent={'center'}
+        height={'100%'}>
         <ButtonGroup variant="text" color="primary" aria-label="">
           {pagesMenu.map((item, key) => {
             return (

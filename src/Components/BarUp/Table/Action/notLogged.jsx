@@ -6,6 +6,7 @@ import Badge from '@mui/material/Badge';
 import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
+
 const NotLogged = () => {
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);
@@ -16,6 +17,7 @@ const NotLogged = () => {
   const handleSearchDialog = () => {
     setSearchDialog(!searchDialog);
   };
+
   const handleCart = () => {
     setCart(!cart);
   };
