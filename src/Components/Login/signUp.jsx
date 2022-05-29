@@ -9,6 +9,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import { isAlpha, isEmail, isStrongPassword } from 'validator';
 const SignUp = (props) => {
   const handleView = props.handleView;
   const handleCloseDialog = props.handleCloseDialog;
@@ -26,16 +27,100 @@ const SignUp = (props) => {
     showPassword: false,
   });
 
-  const handleChangeFirstName = () => {};
-  const handleChangeSecondName = () => {};
-  const handleChangeEmail = () => {};
-  const handleChangePassword = () => {};
-  const handleChangeRePassword = () => {};
-  const handleShowPassword = () => {};
+  const handleChangeFirstName = (e) => {
+    if (e.target.value == '') {
+      setData({ ...data, firstName: '', errorFirstName: false });
+      return;
+    }
+
+    if (!isAlpha(e.target.value, ['en-US'], { ignore: ' ' })) {
+      setData({ ...data, firstName: e.target.value, errorFirstName: true });
+      return;
+    }
+
+    setData({ ...data, errorFirstName: false, firstName: e.target.value });
+
+    /*  setData({ ...data, errorFirstName: false }); */
+  };
+
+  const handleChangeSecondName = (e) => {
+    if (e.target.value == '') {
+      setData({ ...data, secondName: '', errorSecondName: false });
+      return;
+    }
+
+    if (!isAlpha(e.target.value, ['en-US'], { ignore: ' ' })) {
+      setData({ ...data, secondName: e.target.value, errorSecondName: true });
+      return;
+    }
+
+    setData({ ...data, errorSecondName: false, secondName: e.target.value });
+  };
+
+  const handleChangeEmail = (e) => {
+    if (e.target.value == '') {
+      setData({ ...data, email: '', errorEmail: false });
+      return;
+    }
+    if (!isEmail(e.target.value)) {
+      setData({ ...data, email: e.target.value, errorEmail: true });
+      return;
+    }
+    setData({ ...data, errorEmail: false, email: e.target.value });
+  };
+
+  const handleChangePassword = (e) => {
+    if (e.target.value == '') {
+      setData({ ...data, password: '', errorPassword: false });
+      return;
+    }
+    if (!isStrongPassword(e.target.value)) {
+      setData({ ...data, password: e.target.value, errorPassword: true });
+      return;
+    }
+    setData({ ...data, errorPassword: false, password: e.target.value });
+  };
+
+  const handleChangeRePassword = (e) => {
+    if (e.target.value == '') {
+      setData({ ...data, rePassword: '', errorRePassword: false });
+      return;
+    }
+    if (data.password !== e.target.value) {
+      setData({ ...data, errorRePassword: true, rePassword: e.target.value });
+      return;
+    }
+    setData({ ...data, rePassword: e.target.value, errorRePassword: false });
+  };
+
+  const handleShowPassword = () => {
+    setData({ ...data, showPassword: !data.showPassword });
+  };
+
   const handleClickLogin = () => {
     handleView(0);
   };
-  const handleClickSignUp = () => {};
+
+  const handleClickSignUp = () => {
+    if (
+      data.firstName === '' ||
+      data.secondName === '' ||
+      data.email === '' ||
+      data.password === '' ||
+      data.rePassword === '' ||
+      data.errorFirstName ||
+      data.errorSecondName ||
+      data.errorEmail ||
+      data.errorPassword ||
+      data.errorRePassword
+    ) {
+      return;
+    }
+
+    /*Accion de registro aqui*/
+
+    handleCloseDialog();
+  };
   const handleClickForget = () => {
     handleView(3);
   };
@@ -43,15 +128,15 @@ const SignUp = (props) => {
   return (
     <Box
       textAlign={'center'}
-      sx={{ p: 1 }}
+      sx={{ p: 1, pt: 2, pb: 2 }}
       minHeight={'250px'}
-      minWidth={'300px'}>
+      minWidth={'200px'}>
       <Box>
         <TextField
           helperText={data.errorFirstName ? 'Invalid Name Format' : ''}
           error={data.errorFirstName}
           required
-          id="outlined-required"
+          id="fname"
           label="First Name"
           value={data.firstName}
           size={'small'}
@@ -64,7 +149,7 @@ const SignUp = (props) => {
           helperText={data.errorSecondName ? 'Invalid Name Format' : ''}
           error={data.errorSecondName}
           required
-          id="outlined-required"
+          id="sname"
           label="Second Name"
           value={data.secondName}
           size={'small'}
@@ -77,7 +162,7 @@ const SignUp = (props) => {
           helperText={data.errorEmail ? 'Invalid Name Format' : ''}
           error={data.errorEmail}
           required
-          id="outlined-required"
+          id="email"
           label="Email"
           value={data.email}
           size={'small'}
@@ -94,7 +179,6 @@ const SignUp = (props) => {
 
           <OutlinedInput
             error={data.errorPassword}
-            helperText={data.errorPassword ? 'Invalid Password Format' : ''}
             fullWidth
             size="small"
             id="outlined-adornment-password"
@@ -107,7 +191,7 @@ const SignUp = (props) => {
                   onClick={handleShowPassword}
                   variant="text"
                   color="default">
-                  {data.showpassword ? (
+                  {data.showPassword ? (
                     <Icon
                       icon="entypo:eye"
                       color="#263238"
@@ -133,10 +217,10 @@ const SignUp = (props) => {
       <Box sx={{ mt: 1 }}>
         <TextField
           type={data.showPassword ? 'text' : 'password'}
-          helperText={data.errorRePassword ? 'Invalid Name Format' : ''}
+          helperText={data.errorRePassword ? 'Passwords not Match' : ''}
           error={data.errorRePassword}
           required
-          id="outlined-required"
+          id="rePass"
           label="Repeat Password"
           value={data.rePassword}
           size={'small'}
