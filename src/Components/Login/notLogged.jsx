@@ -9,10 +9,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Button from '@mui/material/Button';
 import { isEmail, isStrongPassword } from 'validator';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const NotLogged = (props) => {
   const handleView = props.handleView;
   const handleCloseDialog = props.handleCloseDialog;
+  const [isLoading, setIsLoading] = React.useState(false);
   const [isErrorEmail, setIsErrorEmail] = React.useState(false);
   const [isErrorPass, setIsErrorPass] = React.useState(false);
   const [passValues, setPassValues] = React.useState({
@@ -23,7 +25,9 @@ const NotLogged = (props) => {
     weightRange: '',
     showPassword: false,
   });
-
+  const handleIsLoading = () => {
+    setIsLoading(!isLoading);
+  };
   const handleChange = (event) => {
     setPassValues({ ...passValues, password: event.target.value });
     if (event.target.value === '') {
@@ -55,12 +59,25 @@ const NotLogged = (props) => {
     handleView(3);
     /*  handleCloseDialog(); */
   };
+
   const handleClickSignUp = () => {
     handleView(4);
     /*  handleCloseDialog(); */
   };
+
   const handleClickLogin = () => {
-    handleCloseDialog();
+    if (
+      passValues.email === '' ||
+      passValues.password === '' ||
+      passValues.isErrorEmail ||
+      passValues.isErrorPass
+    ) {
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
   return (
     <Box
@@ -78,6 +95,7 @@ const NotLogged = (props) => {
       </Box>
       <Box sx={{ mt: 2 }} textAlign={'center'}>
         <TextField
+          disabled={isLoading}
           helperText={isErrorEmail ? 'Invalid Email Format' : ''}
           error={isErrorEmail}
           required
@@ -90,7 +108,10 @@ const NotLogged = (props) => {
         />
       </Box>
       <Box textAlign={'center'}>
-        <FormControl sx={{ mt: 2, width: '100%' }} variant="outlined">
+        <FormControl
+          disabled={isLoading}
+          sx={{ mt: 2, width: '100%' }}
+          variant="outlined">
           <InputLabel sx={{ mt: -1 }} htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
@@ -106,7 +127,11 @@ const NotLogged = (props) => {
             onChange={handleChange}
             endAdornment={
               <InputAdornment position="end">
-                <Button onClick={handleShowPass} variant="text" color="default">
+                <Button
+                  onClick={handleShowPass}
+                  disabled={isLoading}
+                  variant="text"
+                  color="default">
                   {passValues.showPassword ? (
                     <Icon
                       icon="entypo:eye"
@@ -131,17 +156,19 @@ const NotLogged = (props) => {
       </Box>
       <Box sx={{ mt: 3 }}>
         <Button
+          disabled={isLoading}
           fullWidth
           onClick={handleClickLogin}
           variant="contained"
           color="secondary">
-          Login
+          {!isLoading ? 'Login' : <CircularProgress disableShrink />}
         </Button>
       </Box>
       <Box sx={{ mt: 2 }}>
         <Grid container spacing={1}>
           <Grid item xs={6}>
             <Button
+              disabled={isLoading}
               fullWidth
               onClick={handleClickForget}
               sx={{ mr: 2 }}
@@ -152,6 +179,7 @@ const NotLogged = (props) => {
           </Grid>
           <Grid item xs={6}>
             <Button
+              disabled={isLoading}
               fullWidth
               onClick={handleClickSignUp}
               variant="outlined"

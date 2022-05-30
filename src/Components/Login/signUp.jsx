@@ -9,10 +9,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 import { isAlpha, isEmail, isStrongPassword } from 'validator';
 const SignUp = (props) => {
   const handleView = props.handleView;
   const handleCloseDialog = props.handleCloseDialog;
+  const [isLoading, setIsLoading] = React.useState(false);
   const [data, setData] = React.useState({
     firstName: '',
     secondName: '',
@@ -26,7 +28,9 @@ const SignUp = (props) => {
     errorRePassword: false,
     showPassword: false,
   });
-
+  const handleIsLoading = () => {
+    setIsLoading(!isLoading);
+  };
   const handleChangeFirstName = (e) => {
     if (e.target.value == '') {
       setData({ ...data, firstName: '', errorFirstName: false });
@@ -118,8 +122,10 @@ const SignUp = (props) => {
     }
 
     /*Accion de registro aqui*/
-
-    handleCloseDialog();
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
   const handleClickForget = () => {
     handleView(3);
@@ -133,6 +139,7 @@ const SignUp = (props) => {
       minWidth={'200px'}>
       <Box>
         <TextField
+          disabled={isLoading}
           helperText={data.errorFirstName ? 'Invalid Name Format' : ''}
           error={data.errorFirstName}
           required
@@ -146,6 +153,7 @@ const SignUp = (props) => {
       </Box>
       <Box sx={{ mt: 1 }}>
         <TextField
+          disabled={isLoading}
           helperText={data.errorSecondName ? 'Invalid Name Format' : ''}
           error={data.errorSecondName}
           required
@@ -159,6 +167,7 @@ const SignUp = (props) => {
       </Box>
       <Box sx={{ mt: 1 }}>
         <TextField
+          disabled={isLoading}
           helperText={data.errorEmail ? 'Invalid Name Format' : ''}
           error={data.errorEmail}
           required
@@ -172,7 +181,10 @@ const SignUp = (props) => {
       </Box>
       <Divider sx={{ mt: 3 }} />
       <Box sx={{ mt: 1 }}>
-        <FormControl sx={{ mt: 2, width: '100%' }} variant="outlined">
+        <FormControl
+          disabled={isLoading}
+          sx={{ mt: 2, width: '100%' }}
+          variant="outlined">
           <InputLabel sx={{ mt: -1 }} htmlFor="outlined-adornment-password">
             Password
           </InputLabel>
@@ -216,6 +228,7 @@ const SignUp = (props) => {
 
       <Box sx={{ mt: 1 }}>
         <TextField
+          disabled={isLoading}
           type={data.showPassword ? 'text' : 'password'}
           helperText={data.errorRePassword ? 'Passwords not Match' : ''}
           error={data.errorRePassword}
@@ -230,17 +243,19 @@ const SignUp = (props) => {
       </Box>
       <Box sx={{ mt: 3 }}>
         <Button
+          disabled={isLoading}
           fullWidth
           onClick={handleClickSignUp}
           variant="contained"
           color={'secondary'}>
-          Sign Up
+          {!isLoading ? 'Sign Up' : <CircularProgress disableShrink />}
         </Button>
       </Box>
       <Box sx={{ mt: 2 }}>
         <Grid container spacing={1}>
           <Grid item xs={6}>
             <Button
+              disabled={isLoading}
               fullWidth
               onClick={handleClickForget}
               sx={{ mr: 2 }}
@@ -251,6 +266,7 @@ const SignUp = (props) => {
           </Grid>
           <Grid item xs={6}>
             <Button
+              disabled={isLoading}
               fullWidth
               onClick={handleClickLogin}
               variant="outlined"

@@ -6,22 +6,48 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
+import CircularProgress from '@mui/material/CircularProgress';
+import { isEmail } from 'validator';
 const ForgetPass = (props) => {
   const handleView = props.handleView;
   const handleCloseDialog = props.handleCloseDialog;
   const [email, setEmail] = React.useState('');
-  const [statusBtn, setStatusBtn] = React.useState(false);
+  const [errorEmail, setErrorEmail] = React.useState(false);
 
-  const handleChangeEmail = (e) => {
-    setEmail(e.target.value);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const handleIsLoading = () => {
+    setIsLoading(!isLoading);
   };
+
+  const handleChangeEmail = (event) => {
+    setEmail(event.target.value);
+
+    if (event.target.value === '') {
+      setErrorEmail(false);
+      return;
+    }
+    if (!isEmail(event.target.value)) {
+      setErrorEmail(true);
+      return;
+    }
+    setErrorEmail(false);
+  };
+
   const handleClickLogin = () => {
     handleView(0);
   };
+
   const handleClickSendMail = () => {
-    setStatusBtn(!statusBtn);
-    handleCloseDialog();
+    if (email === '' || errorEmail) {
+      return;
+    }
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
   };
+
   return (
     <Box
       textAlign={'center'}
@@ -38,7 +64,8 @@ const ForgetPass = (props) => {
       </Box>
       <Box sx={{ mt: 2 }} textAlign={'center'}>
         <TextField
-          disabled={statusBtn}
+          error={errorEmail}
+          disabled={isLoading}
           required
           id="outlined-required"
           label="Email"
@@ -56,17 +83,17 @@ const ForgetPass = (props) => {
         {' '}
         <Button
           fullWidth
-          disabled={statusBtn}
+          disabled={isLoading}
           onClick={handleClickSendMail}
           variant="contained"
           color="secondary">
-          Send Email
+          {!isLoading ? 'Send Email' : <CircularProgress disableShrink />}
         </Button>
       </Box>
       <Box>
         <Button
           fullWidth
-          disabled={statusBtn}
+          disabled={isLoading}
           onClick={handleClickLogin}
           variant="outlined"
           color="primary">

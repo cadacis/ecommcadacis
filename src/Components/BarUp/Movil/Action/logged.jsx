@@ -9,6 +9,7 @@ import Popover from '@mui/material/Popover';
 import { Icon } from '@iconify/react';
 import pages from '../../pages';
 import Divider from '@mui/material/Divider';
+import Cart from '../../../Carts/SmallCart';
 const Logged = () => {
   var userName = 'Avatar Avatar Coco';
   var avatarUser =
@@ -74,7 +75,7 @@ const Logged = () => {
         open={cart}
         onClose={handleCart}>
         <Box>
-          <Typography textAlign="center">Cart Commerce</Typography>
+          <Cart />
         </Box>
       </Menu>
       <Menu

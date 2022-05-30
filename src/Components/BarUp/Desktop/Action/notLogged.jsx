@@ -7,6 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Login from '../../../Login';
+import Cart from '../../../Carts/SmallCart';
 const NotLogged = () => {
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);
@@ -56,8 +57,7 @@ const NotLogged = () => {
         open={cart}
         onClose={handleCart}>
         <Box>
-          {' '}
-          <Typography textAlign="center">Cart Commerce</Typography>
+          <Cart />
         </Box>
       </Menu>
 

@@ -1,5 +1,4 @@
 import React from 'react';
-import IsLogged from './isLogged';
 import NotLogged from './notLogged';
 import NotConfirmed from './notConfirmed';
 import ForgetPass from './forgetPass';
@@ -20,12 +19,8 @@ const Index = (props) => {
     );
   }
   if (userStatus === 1) {
-    return (
-      <IsLogged
-        handleView={setUserStatus}
-        handleCloseDialog={handleCloseDialog}
-      />
-    );
+    /*Navigate React Router Dom to My Account*/
+    return <div></div>;
   }
   if (userStatus === 2) {
     return (
