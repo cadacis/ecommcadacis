@@ -6,13 +6,13 @@ import Divider from '@mui/material/Divider';
 import axios from 'axios';
 import IsLoading from './isLoading';
 import Typography from '@mui/material/Typography';
+import { Icon } from '@iconify/react';
 
 const Item = (props) => {
   var data = props.data;
   var total = props.total - 1;
   var num = props.num;
-  console.log(total);
-  console.log(num);
+
   return (
     <Box sx={{ mt: 0.5, mb: 0.5 }}>
       <Box display="flex">
@@ -27,10 +27,21 @@ const Item = (props) => {
             {data.description.substr(0, 15) + '...'}
           </Typography>
         </Box>
-        <Box>
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}>
           <Typography variant="body1" color="secondary">
             {'x' + 1}
           </Typography>
+        </Box>
+        <Box
+          display={'flex'}
+          flexDirection={'column'}
+          justifyContent={'center'}>
+          <Button variant="text" color="primary">
+            <Icon icon="ep:close" color="#263238" width="25" height="25" />
+          </Button>
         </Box>
       </Box>
       {total == num ? '' : <Divider />}
