@@ -9,6 +9,10 @@ import Typography from '@mui/material/Typography';
 
 const Item = (props) => {
   var data = props.data;
+  var total = props.total - 1;
+  var num = props.num;
+  console.log(total);
+  console.log(num);
   return (
     <Box sx={{ mt: 0.5, mb: 0.5 }}>
       <Box display="flex">
@@ -29,6 +33,7 @@ const Item = (props) => {
           </Typography>
         </Box>
       </Box>
+      {total == num ? '' : <Divider />}
     </Box>
   );
 };
@@ -72,7 +77,9 @@ const IsItems = () => {
     <Box sx={{ minWidth: { xs: '300px', sm: '350px' }, p: 1 }}>
       <Box sx={{ p: 1 }}>
         {products.map((item, key) => {
-          return <Item data={item} />;
+          return (
+            <Item key={key} num={key} total={products.length} data={item} />
+          );
         })}
       </Box>
       <Divider sx={{ mt: 1 }} />
