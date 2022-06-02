@@ -27,8 +27,8 @@ const Items = () => {
     });
     setProducts(result);
   };
-  const handleRemoveAll = (id) => {
-    setProducts([]);
+  const handleCheckout = () => {
+    return;
   };
   React.useEffect(() => {
     getProduct();
@@ -145,23 +145,17 @@ const Items = () => {
       <Box sx={{ mt: 4 }}>
         <Grid container spacing={1}>
           <Grid item xs={6}>
-            <Button
-              onClick={handleRemoveAll}
-              variant="contained"
-              color="secondary"
-              fullWidth>
+            <Button variant="outlined" color="primary" fullWidth>
               Buy More
             </Button>
           </Grid>
           <Grid item xs={6}>
             <Button
               fullWidth
-              onClick={handleRemoveAll}
-              variant="outlined"
-              color="primary">
-              <Typography variant="body1" color="primary">
-                Remove All
-              </Typography>
+              onClick={handleCheckout}
+              variant="contained"
+              color="secondary">
+              Checkout
             </Button>
           </Grid>
         </Grid>
