@@ -40,7 +40,7 @@ const IsLoading = () => {
   return (
     <div>
       {itemslist.map((item, key) => {
-        return <Items />;
+        return <Items key={key} />;
       })}
     </div>
   );

@@ -9,7 +9,7 @@ import Popover from '@mui/material/Popover';
 import { Icon } from '@iconify/react';
 import pages from '../../pages';
 import Divider from '@mui/material/Divider';
-import Cart from '../../../Carts/SmallCart';
+import Cart from '../../../Carts/Movile';
 const Logged = () => {
   var userName = 'Avatar Avatar Coco';
   var avatarUser =

@@ -4,10 +4,12 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import pagesMenu from '../../pages';
+import { useNavigate } from 'react-router-dom';
+
 const Index = () => {
+  var navigate = useNavigate();
   return (
     <div>
-      {/*zxc*/}
       <Box
         display={'flex'}
         flexDirection="column"
@@ -16,7 +18,11 @@ const Index = () => {
         <ButtonGroup variant="text" color="primary" aria-label="">
           {pagesMenu.map((item, key) => {
             return (
-              <Button key={key} color="white" link={item.link}>
+              <Button
+                onClick={() => navigate(item.link)}
+                key={key}
+                color="white"
+                link={item.link}>
                 <Typography fontSize={'15px'} variant={'body1'} color="white">
                   {item.title}
                 </Typography>

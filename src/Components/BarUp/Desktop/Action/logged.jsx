@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import Badge from '@mui/material/Badge';
 import Popover from '@mui/material/Popover';
 import { Icon } from '@iconify/react';
-import Cart from '../../../Carts/SmallCart';
+import Cart from '../../../Carts/Movile';
 const Logged = () => {
   var userName = 'Avatar Avatar Coco';
   var avatarUser =

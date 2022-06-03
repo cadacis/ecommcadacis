@@ -10,8 +10,11 @@ const CardMovil = (props) => {
   var data = props.data;
   const [statusDeploy, setStatusDeploy] = React.useState(false);
   const [count, setCount] = React.useState(1);
-  const handleDeploy = () => {
+  /*   const handleDeploy = () => {
     setStatusDeploy(!statusDeploy);
+  }; */
+  const handleDeploy = () => {
+    props.handleDeploy(data.id);
   };
   const handleMore = () => {
     setCount(count + 1);
@@ -39,7 +42,7 @@ const CardMovil = (props) => {
           sx={{
             borderTopLeftRadius: 7,
             borderTopRightRadius: 7,
-            backgroundColor: statusDeploy ? '#009688' : ' rgb(0, 0, 0, 0)',
+            backgroundColor: data.deploy ? '#009688' : ' rgb(0, 0, 0, 0)',
           }}
           display="flex">
           <Box textAlign={'left'}>
@@ -48,7 +51,7 @@ const CardMovil = (props) => {
               sx={{ borderRadius: 10, ml: -2 }}
               variant="text"
               color="primary">
-              {!statusDeploy ? (
+              {!data.deploy ? (
                 <Icon icon="bi:arrow-down-circle" width="25" height="25" />
               ) : (
                 <Icon
@@ -67,7 +70,7 @@ const CardMovil = (props) => {
             justifyContent={'center'}
             flexGrow={1}>
             <Typography
-              sx={{ color: statusDeploy ? '#ffffff' : '#000000' }}
+              sx={{ color: data.deploy ? '#ffffff' : '#000000' }}
               textAlign={'left'}
               variant="body1">
               {data.title.substr(0, 18) + '...'}
@@ -80,7 +83,7 @@ const CardMovil = (props) => {
             sx={{ mr: 0.5 }}>
             <Typography
               variant="body1"
-              sx={{ color: statusDeploy ? '#ffffff' : '#000000' }}
+              sx={{ color: data.deploy ? '#ffffff' : '#000000' }}
               color="white.main">
               <strong> {'$' + data.price}</strong>
             </Typography>
@@ -88,7 +91,7 @@ const CardMovil = (props) => {
         </Box>
       </Box>
 
-      <Box sx={{ display: statusDeploy ? 'block' : 'none', p: 1 }}>
+      <Box sx={{ display: data.deploy ? 'block' : 'none', p: 1 }}>
         <Box display="flex">
           <Box>
             <Box sx={{ width: '60px' }}>

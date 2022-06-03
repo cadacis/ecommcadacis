@@ -7,7 +7,7 @@ import Dialog from '@mui/material/Dialog';
 import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Login from '../../../Login';
-import Cart from '../../../Carts/SmallCart';
+import Cart from '../../../Carts/Movile';
 const NotLogged = () => {
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);

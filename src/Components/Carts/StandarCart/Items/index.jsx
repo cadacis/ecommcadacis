@@ -16,7 +16,11 @@ const Items = () => {
 
   const getProduct = async () => {
     var fetch = await axios.get('https://fakestoreapi.com/products');
-    setProducts(fetch.data.splice(1, 8));
+    var data = fetch.data.splice(1, 8);
+    data = data.map((item) => {
+      return { ...item, deploy: false };
+    });
+    setProducts(data);
     setisLoading(false);
   };
   const handleRemove = (id) => {
@@ -30,6 +34,20 @@ const Items = () => {
   const handleCheckout = () => {
     return;
   };
+  const handleDeploy = (id) => {
+    var data = products.map((item) => {
+      if (item.deploy) {
+        return { ...item, deploy: false };
+      }
+
+      if (item.id == id) {
+        return { ...item, deploy: !item.deploy };
+      }
+      return item;
+    });
+    setProducts(data);
+  };
+
   React.useEffect(() => {
     getProduct();
   }, []);
@@ -83,7 +101,12 @@ const Items = () => {
     <Box sx={{ p: 2 }}>
       {products.map((item) => {
         return (
-          <CartMovil handleRemove={handleRemove} key={item.id} data={item} />
+          <CartMovil
+            handleDeploy={handleDeploy}
+            handleRemove={handleRemove}
+            key={item.id}
+            data={item}
+          />
         );
       })}
       <Box
@@ -127,7 +150,7 @@ const Items = () => {
           sx={{
             p: 1,
             color: '#ffffff',
-            backgroundColor: '#009688',
+            backgroundColor: 'gray',
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
           }}>
