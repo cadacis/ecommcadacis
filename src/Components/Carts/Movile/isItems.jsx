@@ -7,12 +7,15 @@ import axios from 'axios';
 import IsLoading from './isLoading';
 import Typography from '@mui/material/Typography';
 import { Icon } from '@iconify/react';
+import { useSelector, useDispatch } from 'react-redux';
+import { removeItem } from '../../../redux/actions/cart';
+import { useNavigate } from 'react-router-dom';
 
 const Item = (props) => {
   var data = props.data;
   var total = props.total - 1;
   var num = props.num;
-
+  const handleRemove = props.handleRemove;
   return (
     <Box sx={{ mt: 0.5, mb: 0.5 }}>
       <Box display="flex">
@@ -32,14 +35,17 @@ const Item = (props) => {
           flexDirection={'column'}
           justifyContent={'center'}>
           <Typography variant="body1" color="secondary">
-            {'x' + 1}
+            {'x' + data.count}
           </Typography>
         </Box>
         <Box
           display={'flex'}
           flexDirection={'column'}
           justifyContent={'center'}>
-          <Button variant="text" color="primary">
+          <Button
+            onClick={() => handleRemove(data.id)}
+            variant="text"
+            color="primary">
             <Icon icon="ep:close" color="#263238" width="25" height="25" />
           </Button>
         </Box>
@@ -49,19 +55,15 @@ const Item = (props) => {
   );
 };
 
-const IsItems = () => {
-  const [products, setProducts] = React.useState([]);
-
-  const getProduct = async () => {
-    var fetch = await axios.get('https://fakestoreapi.com/products');
-    setProducts(fetch.data.splice(1, 6));
+const IsItems = (props) => {
+  const navigate = useNavigate();
+  const products = useSelector((state) => state.cart.items);
+  const dispatch = useDispatch();
+  /*const handleCart = (handleCart = { handleCart });*/
+  const handleRemove = (id) => {
+    dispatch(removeItem(id));
   };
 
-  React.useEffect(() => {
-    getProduct();
-  }, []);
-
-  /*Retorna en espera si el listado esta vacio*/
   if (products.length == 0) {
     return (
       <Box sx={{ p: 1 }}>
@@ -69,12 +71,22 @@ const IsItems = () => {
         <Box sx={{ mt: 1 }} textAlign={'center'}>
           <Grid container spacing={1}>
             <Grid item xs={6}>
-              <Button disabled fullWidth variant="outlined" color="primary">
+              <Button
+                onClick={() => navigate('/cart')}
+                disabled
+                fullWidth
+                variant="outlined"
+                color="primary">
                 Cart
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button disabled fullWidth variant="contained" color="secondary">
+              <Button
+                onClick={() => navigate('/cart')}
+                disabled
+                fullWidth
+                variant="contained"
+                color="secondary">
                 Checkout
               </Button>
             </Grid>
@@ -89,7 +101,13 @@ const IsItems = () => {
       <Box sx={{ p: 1 }}>
         {products.map((item, key) => {
           return (
-            <Item key={key} num={key} total={products.length} data={item} />
+            <Item
+              handleRemove={handleRemove}
+              key={key}
+              num={key}
+              total={products.length}
+              data={item}
+            />
           );
         })}
       </Box>
@@ -119,12 +137,20 @@ const IsItems = () => {
       <Box sx={{ mt: 2 }} textAlign={'center'}>
         <Grid container spacing={1}>
           <Grid item xs={6}>
-            <Button fullWidth variant="outlined" color="primary">
+            <Button
+              onClick={() => navigate('/cart')}
+              fullWidth
+              variant="outlined"
+              color="primary">
               Cart
             </Button>
           </Grid>
           <Grid item xs={6}>
-            <Button fullWidth variant="contained" color="secondary">
+            <Button
+              onClick={() => navigate('/cart')}
+              fullWidth
+              variant="contained"
+              color="secondary">
               Checkout
             </Button>
           </Grid>

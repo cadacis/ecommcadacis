@@ -19,11 +19,15 @@ import {Shop} from "./Components/listComponent.jsx"
 import {Lists} from "./Components/listComponent.jsx"
 import {Graphics} from "./Components/listComponent.jsx"
 import {Search} from "./Components/listComponent.jsx"
+/**********************************************************************************************************/
+
+import {useDispatch} from "react-redux"
+import {getCart} from "./redux/actions/cart"
 /*********************************************************************************************************/
 var routes = [
   { element: <Home/>, path: '/' },
   { element: <SmallCart/>, path: '/cart/small' },
-  { element: <StandarCart/>, path: '/cart/standar' },
+  { element: <StandarCart/>, path: '/cart' },
   { element: <Checkout/>, path: '/checkout' },
   { element: <Login/>, path: '/login' },
   { element: <MakeError/>, path: '/error' },
@@ -33,8 +37,19 @@ var routes = [
   { element: <Graphics/>, path: '/graphics' },
   { element: <Error404/>, path: '*' }
 ]
-/**********************************************************************************************************/
+
 function App() {
+
+ /*  var dispatch = useDispatch()
+  const getInitialData = ()=>{ dispatch(getCart)}
+
+  React.useEffect(() => {
+    getInitialData()
+    return () => {
+      console.log("Clear Component Function");
+    };
+  }, []); */
+ 
   return (
     <div className="App">
          <HandleError>

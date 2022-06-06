@@ -6,7 +6,7 @@ import IsEmpty from './isEmpty';
 import IsLoading from './isLoading';
 import IsErrorServer from './isErrorServer';
 import IsItems from './isItems';
-const Index = () => {
+const Index = (props) => {
   const [carts, setCarts] = React.useState();
   const [isStatus, setStatus] = React.useState(2);
   /*0=isLoading, 1 = isErrorServer, 2 = isItems, default = isEmpty*/
@@ -20,7 +20,7 @@ const Index = () => {
   }
 
   if (isStatus === 2) {
-    return <IsItems />;
+    return <IsItems handleCart={props.handleCart} />;
   }
   /*Return Default*/
   return <IsEmpty />;

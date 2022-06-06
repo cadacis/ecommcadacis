@@ -5,25 +5,27 @@ import { Icon } from '@iconify/react';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-
+import { useDispatch } from 'react-redux';
+import { updateItem } from '../../../../redux/actions/cart';
+import { removeItem } from '../../../../redux/actions/cart';
 const CardMovil = (props) => {
+  const dispatch = useDispatch();
   var data = props.data;
-  const [statusDeploy, setStatusDeploy] = React.useState(false);
-  const [count, setCount] = React.useState(1);
-  /*   const handleDeploy = () => {
-    setStatusDeploy(!statusDeploy);
-  }; */
   const handleDeploy = () => {
     props.handleDeploy(data.id);
   };
   const handleMore = () => {
-    setCount(count + 1);
+    dispatch(updateItem({ ...data, count: data.count + 1 }));
   };
   const handleLess = () => {
-    if (count === 0) {
+    if (data.count === 1) {
+      dispatch(removeItem(data.id));
       return;
     }
-    setCount(count - 1);
+    if (data.count === 0) {
+      return;
+    }
+    dispatch(updateItem({ ...data, count: data.count - 1 }));
   };
   const handleRemove = () => {
     props.handleRemove(data.id);
@@ -142,7 +144,7 @@ const CardMovil = (props) => {
                     flexDirection="column"
                     justifyContent={'center'}>
                     <Typography variant="body1" color="secondary">
-                      <strong>{count}</strong>
+                      <strong>{data.count}</strong>
                     </Typography>
                   </Box>
                 </Grid>

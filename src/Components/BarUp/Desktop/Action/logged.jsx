@@ -4,8 +4,9 @@ import Avatar from '@mui/material/Avatar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Menu from '@mui/material/Menu';
-import Badge from '@mui/material/Badge';
+import { useSelector } from 'react-redux';
 import Popover from '@mui/material/Popover';
+import Badge from '@mui/material/Badge';
 import { Icon } from '@iconify/react';
 import Cart from '../../../Carts/Movile';
 const Logged = () => {
@@ -22,7 +23,15 @@ const Logged = () => {
   ];
   const [menu, setMenu] = React.useState(false);
   const [cart, setCart] = React.useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const totalItemCart = useSelector((state) => {
+    var total = 0;
+    state.cart.items.map((item) => {
+      total = total + item.count;
+    });
+    return total; /* state.cart.items.length */
+  });
+
+  const [anchorEl, setAnchorEl] = React.useState(false);
   const open = Boolean(anchorEl);
   const id = open ? 'cart-popover' : undefined;
   const handleCart = () => {
@@ -71,7 +80,7 @@ const Logged = () => {
         open={cart}
         onClose={handleCart}>
         <Box>
-          <Cart />
+          <Cart handleCart={handleCart} />
         </Box>
       </Menu>
       <Menu
@@ -117,7 +126,7 @@ const Logged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Badge color="secondary" badgeContent={0} showZero>
+        <Badge color="secondary" badgeContent={totalItemCart} showZero>
           <Icon icon="mdi-light:cart" color="white" width="25" height="25" />
         </Badge>
       </Button>

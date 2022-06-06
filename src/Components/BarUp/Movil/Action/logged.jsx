@@ -10,6 +10,7 @@ import { Icon } from '@iconify/react';
 import pages from '../../pages';
 import Divider from '@mui/material/Divider';
 import Cart from '../../../Carts/Movile';
+import { useSelector } from 'react-redux';
 const Logged = () => {
   var userName = 'Avatar Avatar Coco';
   var avatarUser =
@@ -25,7 +26,13 @@ const Logged = () => {
   ];
   const [menu, setMenu] = React.useState(false);
   const [cart, setCart] = React.useState(false);
-
+  const totalItemCart = useSelector((state) => {
+    var total = 0;
+    state.cart.items.map((item) => {
+      total = total + item.count;
+    });
+    return total;
+  });
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const id = open ? 'cart-popover' : undefined;
@@ -75,7 +82,7 @@ const Logged = () => {
         open={cart}
         onClose={handleCart}>
         <Box>
-          <Cart />
+          <Cart handleCart={handleCart} />
         </Box>
       </Menu>
       <Menu
@@ -140,7 +147,7 @@ const Logged = () => {
         sx={{ borderRadius: 12, mt: 0.5 }}
         variant="text"
         color="white">
-        <Badge color="secondary" badgeContent={0} showZero>
+        <Badge color="secondary" badgeContent={totalItemCart} showZero>
           <Icon icon="mdi-light:cart" color="white" width="35" height="35" />
         </Badge>
       </Button>

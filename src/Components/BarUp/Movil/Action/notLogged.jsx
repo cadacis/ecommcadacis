@@ -8,10 +8,18 @@ import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Login from '../../../Login';
 import Cart from '../../../Carts/Movile';
+import { useSelector } from 'react-redux';
 const NotLogged = () => {
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);
   const [cart, setCart] = React.useState(false);
+  const totalItemCart = useSelector((state) => {
+    var total = 0;
+    state.cart.items.map((item) => {
+      total = total + item.count;
+    });
+    return total;
+  });
   const handleLoginDialog = () => {
     setLoginDialog(!loginDialog);
   };
@@ -58,7 +66,7 @@ const NotLogged = () => {
         open={cart}
         onClose={handleCart}>
         <Box>
-          <Cart />
+          <Cart handleCart={handleCart} />
         </Box>
       </Menu>
 
@@ -74,7 +82,7 @@ const NotLogged = () => {
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
-        <Badge color="secondary" badgeContent={0} showZero>
+        <Badge color="secondary" badgeContent={totalItemCart} showZero>
           <Icon icon="mdi-light:cart" color="white" width="30" height="30" />
         </Badge>
       </Button>

@@ -6,68 +6,42 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateItem } from '../../../../redux/actions/cart';
+import { removeItem } from '../../../../redux/actions/cart';
 
-/* import { useNavigate } from 'react-router-dom'; */
+import { useNavigate } from 'react-router-dom';
+
 const Items = () => {
-  /*   const navigate = useNavigate(); */
-  const [products, setProducts] = React.useState([]);
-  const [isLoading, setisLoading] = React.useState(true);
+  /*   const [isLoading, setisLoading] = React.useState(true); */
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+  const products = useSelector((state) => state.cart.items);
 
-  const getProduct = async () => {
-    var fetch = await axios.get('https://fakestoreapi.com/products');
-    var data = fetch.data.splice(1, 8);
-    data = data.map((item) => {
-      return { ...item, deploy: false };
-    });
-    setProducts(data);
-    setisLoading(false);
-  };
   const handleRemove = (id) => {
     var result = products.filter((item) => {
       if (item.id != id) {
         return item;
       }
     });
-    setProducts(result);
+    /* setProducts(result); */
+    dispatch(removeItem(id));
   };
   const handleCheckout = () => {
     return;
   };
   const handleDeploy = (id) => {
-    var data = products.map((item) => {
-      if (item.deploy) {
-        return { ...item, deploy: false };
-      }
-
+    products.map((item) => {
       if (item.id == id) {
-        return { ...item, deploy: !item.deploy };
+        dispatch(updateItem({ ...item, deploy: !item.deploy }));
+        return;
       }
-      return item;
+      if (item.deploy) {
+        dispatch(updateItem({ ...item, deploy: false }));
+      }
     });
-    setProducts(data);
   };
 
-  React.useEffect(() => {
-    getProduct();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <Box display="flex" justifyContent={'center'}>
-        <Box
-          sx={{
-            minHeight: '50px',
-            width: '50px',
-            border: '1px solid rgb(0, 0, 0, 0.4)',
-            borderRadius: 2,
-            p: 2,
-          }}>
-          <CircularProgress sx={{ color: 'rgb(0, 0, 0, 0.4)' }} />
-        </Box>
-      </Box>
-    );
-  }
   if (products.length < 1) {
     return (
       <Box display="flex" justifyContent={'center'}>
@@ -123,7 +97,7 @@ const Items = () => {
             </Grid>
             <Grid item xs={4}></Grid>
             <Grid textAlign={'end'} item xs={4}>
-              $56
+              {cart.subtotal}
             </Grid>
           </Grid>
         </Box>
@@ -138,10 +112,10 @@ const Items = () => {
               Tax
             </Grid>
             <Grid item xs={4}>
-              6%
+              {cart.tax}
             </Grid>
             <Grid textAlign={'end'} item xs={4}>
-              $6
+              {cart.tax}
             </Grid>
           </Grid>
         </Box>
@@ -160,7 +134,7 @@ const Items = () => {
             </Grid>
             <Grid item xs={4}></Grid>
             <Grid textAlign={'end'} item xs={4}>
-              $60
+              {cart.total}
             </Grid>
           </Grid>
         </Box>
