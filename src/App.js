@@ -19,6 +19,7 @@ import {Shop} from "./Components/listComponent.jsx"
 import {Lists} from "./Components/listComponent.jsx"
 import {Graphics} from "./Components/listComponent.jsx"
 import {Search} from "./Components/listComponent.jsx"
+import {DashboardTest} from "./Components/listComponent.jsx"
 /**********************************************************************************************************/
 
 import {useDispatch} from "react-redux"
@@ -35,6 +36,7 @@ var routes = [
   { element: <Lists/>, path: '/lists' },
   { element: <Search/>, path: '/search' },
   { element: <Graphics/>, path: '/graphics' },
+  { element: <DashboardTest/>, path: '/dashboard' },
   { element: <Error404/>, path: '*' }
 ]
 
@@ -56,6 +58,9 @@ function App() {
           <BrowserRouter>
               <Routes>
                 {routes.map((item,key)=>{
+                  if (item.path == "/dashboard") {
+                    return <Route key={key} path={item.path} element={item.element} /> 
+                  }
                   return <Route key={key} path={item.path} element={<LayoutClient>{item.element}</LayoutClient>} /> 
                 })}
               </Routes>

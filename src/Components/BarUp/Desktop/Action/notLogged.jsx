@@ -15,7 +15,7 @@ const NotLogged = () => {
     state.cart.items.map((item) => {
       total = total + item.count;
     });
-    return total; /* state.cart.items.length */
+    return total;
   });
   const [loginDialog, setLoginDialog] = React.useState(false);
   const [searchDialog, setSearchDialog] = React.useState(false);
@@ -28,6 +28,9 @@ const NotLogged = () => {
   };
 
   const handleCart = () => {
+    if (totalItemCart === 0) {
+      return;
+    }
     setCart(!cart);
   };
   return (
@@ -42,12 +45,12 @@ const NotLogged = () => {
         <Login handleCloseDialog={handleLoginDialog} />
       </Dialog>
       {/*Cuadro de Busqueda*/}
-      <Dialog onClose={handleSearchDialog} open={searchDialog}>
-        {/*Dialogo for login*/}
+      {/*   <Dialog onClose={handleSearchDialog} open={searchDialog}>
+
         <Typography variant="h1" color="initial">
           Search Here
         </Typography>
-      </Dialog>
+      </Dialog> */}
       {/*Cuadro de Carrito*/}
       <Menu
         sx={{ mt: '45px' }}
@@ -69,13 +72,13 @@ const NotLogged = () => {
         </Box>
       </Menu>
 
-      <Button
+      {/*   <Button
         onClick={handleSearchDialog}
         sx={{ borderRadius: 12 }}
         variant="text"
         color="white">
         <Icon icon="carbon:search" color="white" width="30" height="30" />
-      </Button>
+      </Button> */}
       <Button
         onClick={handleCart}
         sx={{ borderRadius: 12 }}

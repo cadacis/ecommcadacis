@@ -36,7 +36,13 @@ const CustomCard = (props) => {
 
   return (
     <Box>
-      <Card sx={{ minWidth: 10, p: 2 }}>
+      <Card
+        sx={{
+          minWidth: 10,
+          p: 2,
+          border: '1px solid rgb(0,0,0,0.2)',
+          borderRadius: 3,
+        }}>
         <Box>
           <img
             width="200px"

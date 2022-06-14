@@ -10,8 +10,10 @@ import Shop from './Shop';
 import Lists from './Lists';
 import Graphics from './Graphics';
 import Search from './Search';
+import DashboardTest from './DashBoard';
 /**********************************************************/
 export {
+  DashboardTest,
   Search,
   MakeError,
   SmallCart,

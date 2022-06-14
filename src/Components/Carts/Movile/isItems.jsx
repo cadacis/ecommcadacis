@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 import axios from 'axios';
 import IsLoading from './isLoading';
+import IsEmpty from './isEmpty';
 import Typography from '@mui/material/Typography';
 import { Icon } from '@iconify/react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -61,7 +62,12 @@ const IsItems = (props) => {
   const dispatch = useDispatch();
   /*const handleCart = (handleCart = { handleCart });*/
   const handleRemove = (id) => {
-    dispatch(removeItem(id));
+    if (products.length == 1) {
+      props.handleCart();
+    }
+    setTimeout(() => {
+      dispatch(removeItem(id));
+    }, 50);
   };
 
   if (products.length == 0) {
@@ -103,6 +109,7 @@ const IsItems = (props) => {
           return (
             <Item
               handleRemove={handleRemove}
+              handleCart={props.handleCart}
               key={key}
               num={key}
               total={products.length}
@@ -138,7 +145,10 @@ const IsItems = (props) => {
         <Grid container spacing={1}>
           <Grid item xs={6}>
             <Button
-              onClick={() => navigate('/cart')}
+              onClick={() => {
+                navigate('/cart');
+                props.handleCart();
+              }}
               fullWidth
               variant="outlined"
               color="primary">
@@ -147,7 +157,10 @@ const IsItems = (props) => {
           </Grid>
           <Grid item xs={6}>
             <Button
-              onClick={() => navigate('/cart')}
+              onClick={() => {
+                navigate('/cart');
+                props.handleCart();
+              }}
               fullWidth
               variant="contained"
               color="secondary">

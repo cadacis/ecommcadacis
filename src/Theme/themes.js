@@ -23,6 +23,9 @@ const themeOne = createTheme({
         black: {
             main: "#000000",
           },
+        grayDash:{
+           main:"#979797"
+        }  
       },
 })
 
