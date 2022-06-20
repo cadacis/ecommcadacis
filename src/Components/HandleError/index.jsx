@@ -48,8 +48,8 @@ export default class ErrorBoundary extends React.Component {
                     boxShadow: '0px 0px 15px rgb(0,0,0,0.2) ',
                   }}>
                   <Typography variant="h6" sx={{ color: '#000000' }}>
-                    An error has occurred in this application, we are working to
-                    solve it, please come back later
+                    This is a simulated error in the react application to
+                    demonstrate error handling work with ErrorBoundary
                   </Typography>
                   <Box sx={{ mt: 2 }}>
                     <a href="/" style={{ textDecoration: 'none' }}>

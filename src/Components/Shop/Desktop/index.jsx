@@ -5,7 +5,7 @@ import axios from 'axios';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import CircularProgress from '@mui/material/CircularProgress';
 const Index = () => {
   const [dataOrigen, setDataOrigen] = React.useState([]);
   const [dataFilter, setDataFilter] = React.useState([]);
@@ -77,7 +77,17 @@ const Index = () => {
   }, []);
 
   if (isLoading) {
-    return <Box>Loading</Box>;
+    return (
+      <Box
+        display="flex"
+        flexDirection={'column'}
+        justifyContent="center"
+        sx={{ minHeight: '100vh' }}>
+        <Box>
+          <CircularProgress color="inherit" />
+        </Box>
+      </Box>
+    );
   }
   if (dataFilter.length === 0) {
     return (
@@ -94,29 +104,7 @@ const Index = () => {
                 onChange={handleSearchName}
               />
             </Grid>
-            {/* 
-            <Grid item xs={12} sm={2}>
-              <TextField
-                id="outlined-basic"
-                label={'$-Min = ' + minPrice}
-                variant="outlined"
-                size="small"
-                value={minPrice}
-                fullWidth
-                onChange={handleMinPrice}
-              />
-            </Grid>
-            <Grid item xs={12} sm={2}>
-              <TextField
-                id="outlined-basic"
-                label={'$-Max = ' + maxPrice}
-                variant="outlined"
-                value={maxPrice}
-                size="small"
-                fullWidth
-                onChange={handleMaxPrice}
-              />
-            </Grid> */}
+
             <Grid item xs={12} sm={2}>
               <Button
                 onClick={handleReset}
@@ -147,26 +135,6 @@ const Index = () => {
             />
           </Grid>
 
-          {/*   <Grid item xs={12} sm={2}>
-            <TextField
-              id="outlined-basic"
-      
-              variant="outlined"
-              size="small"
-              fullWidth
-              onChange={handleMinPrice}
-            />
-          </Grid>
-          <Grid item xs={12} sm={2}>
-            <TextField
-              id="outlined-basic"
-          
-              variant="outlined"
-              size="small"
-              fullWidth
-              onChange={handleMaxPrice}
-            />
-          </Grid> */}
           <Grid item xs={12} sm={2}>
             <Button
               onClick={handleReset}
