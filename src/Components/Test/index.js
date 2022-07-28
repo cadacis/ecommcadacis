@@ -53,13 +53,11 @@ const tl = [
 const Form = ({ dataInitial, handleClose, handleResult }) => {
   const minHrs = 'Wed Jul 27 2022 08:00:00 GMT-0500 (Central Daylight Time)';
   const maxHrs = 'Wed Jul 27 2022 18:01:10 GMT-0500 (Central Daylight Time)';
-
+  const [visited, setVisited] = React.useState(1);
   const [patienList, setPatienList] = React.useState([]);
   const [doctorList, setDoctorList] = React.useState([]);
   const [tratamentList, setTratamentList] = React.useState([]);
-  const [errorDay, setErrorDay] = React.useState(false);
-  const [errorFrom, setErrorFrom] = React.useState(false);
-  const [errorTo, setErrorTo] = React.useState(false);
+
   const [appoiments, setAppoiments] = React.useState(dataInitial);
   const [countSteep, setCountSteep] = React.useState(1);
   const [currentAppoiment, setCurrentAppoiment] = React.useState(
@@ -74,19 +72,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setDoctorList(dl);
     setTratamentList(tl);
   };
-  const onErrorDay = (start, end) => {
-    setErrorDay(true);
-  };
-  const onErrorForm = (start, end) => {
-    setErrorFrom(true);
-  };
-  const onErrorTo = (start, end) => {
-    setErrorTo(true);
-  };
   const handleCreate = () => {
-    if (errorDay || errorFrom || errorTo) {
-      return;
-    }
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
@@ -103,11 +89,9 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     handleClose();
   };
   const handleDay = (data) => {
-    setErrorDay(false);
     setCurrentAppoiment({ ...currentAppoiment, date: data });
   };
   const handleFrom = (data) => {
-    setErrorFrom(false);
     var d1 = new Date(data);
     d1 = d1.getTime();
     var d2 = new Date(currentAppoiment.endTime);
@@ -123,11 +107,16 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setCurrentAppoiment({ ...currentAppoiment, startTime: data });
   };
   const handleTo = (data) => {
-    setErrorTo(false);
     setCurrentAppoiment({ ...currentAppoiment, endTime: data });
   };
   const handleAuto = (value) => {
     var value_ = value.target.checked;
+
+    if (!value_) {
+      setVisited(4);
+    } else {
+      setVisited(1);
+    }
 
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
@@ -141,13 +130,23 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setAuto(value_);
   };
   const handleNext = (value) => {
+    setVisited(visited + 1);
+
     if (countSteep == appoiments.length) {
       return;
     }
 
-    if (errorDay || errorFrom || errorTo) {
+    compareHours(currentAppoiment.startTime, currentAppoiment.endTime);
+    if (
+      !validateField(
+        currentAppoiment.date,
+        currentAppoiment.startTime,
+        currentAppoiment.endTime,
+      )
+    ) {
       return;
     }
+
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
@@ -161,7 +160,13 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     if (countSteep == 1) {
       return;
     }
-    if (errorDay || errorFrom || errorTo) {
+    if (
+      !validateField(
+        currentAppoiment.date,
+        currentAppoiment.startTime,
+        currentAppoiment.endTime,
+      )
+    ) {
       return;
     }
     const index = appoiments.findIndex(
@@ -176,20 +181,68 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
   const disableWeekend = (date) => {
     return date.getDay() === 0 || date.getDay() === 6;
   };
-
   const handlePatient = (v) => {
     var data = v.target.value;
     setCurrentAppoiment({ ...currentAppoiment, patient: data });
   };
-
   const handleDoctor = (v) => {
     var data = v.target.value;
     setCurrentAppoiment({ ...currentAppoiment, doctor: data });
   };
-
   const handleTratament = (v) => {
     var data = v.target.value;
     setCurrentAppoiment({ ...currentAppoiment, treatment: data });
+  };
+  const validateField = (day, startHrs, endHrs) => {
+    var shrs = new Date(startHrs).getDate();
+    var ehrs = new Date(endHrs).getDate();
+    var dayVal = new Date(day);
+
+    if (dayVal.getDay() === 0 || dayVal.getDay() === 6) {
+      console.log('error day');
+      return false;
+    }
+    if (shrs > ehrs) {
+      console.log('Inicio Mayor');
+      return false;
+    }
+    if (!compareHours(startHrs, endHrs)) {
+      return false;
+    }
+    if (!compareHours(endHrs, maxHrs)) {
+      return false;
+    }
+    if (!compareHours(minHrs, startHrs)) {
+      return false;
+    }
+    if (!compareHours(startHrs, maxHrs)) {
+      return false;
+    }
+    if (!compareHours(minHrs, endHrs)) {
+      return false;
+    }
+    return true;
+  };
+  const compareHours = (start, end) => {
+    var sHrs = new Date(start);
+    var eHrs = new Date(end);
+    sHrs = {
+      hrs: sHrs.getHours(),
+      min: sHrs.getMinutes(),
+      sec: sHrs.getSeconds(),
+    };
+    eHrs = {
+      hrs: eHrs.getHours(),
+      min: eHrs.getMinutes(),
+      sec: eHrs.getSeconds(),
+    };
+
+    sHrs = parseInt(sHrs.hrs * 3600 + sHrs.min * 60 + sHrs.sec);
+    eHrs = parseInt(eHrs.hrs * 3600 + eHrs.min * 60 + eHrs.sec);
+    if (sHrs <= eHrs) {
+      return true;
+    }
+    return false;
   };
 
   const closeForm = () => {
@@ -248,52 +301,35 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
               <DesktopDatePicker
                 label="Day"
                 inputFormat="MM/dd/yyyy"
-                onError={onErrorDay}
                 shouldDisableDate={disableWeekend}
                 value={new Date(currentAppoiment.date || new Date())}
                 onChange={handleDay}
                 renderInput={(params) => (
-                  <TextField
-                    fullWidth
-                    size="small"
-                    readOnly={true}
-                    {...params}
-                  />
+                  <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="From"
-                onError={onErrorForm}
                 minTime={new Date(minHrs)}
                 value={new Date(currentAppoiment.startTime || new Date())}
                 onChange={handleFrom}
                 renderInput={(params) => (
-                  <TextField
-                    readOnly={true}
-                    fullWidth
-                    size="small"
-                    {...params}
-                  />
+                  <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="To"
-                onError={onErrorTo}
                 minTime={new Date(currentAppoiment.startTime)}
                 maxTime={new Date(maxHrs)}
                 value={new Date(currentAppoiment.endTime || new Date())}
                 onChange={handleTo}
+                InputProps={{ readOnly: true }}
                 renderInput={(params) => (
-                  <TextField
-                    readOnly={true}
-                    fullWidth
-                    size="small"
-                    {...params}
-                  />
+                  <TextField disabled fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
@@ -402,7 +438,11 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
               </Button>
             </Grid>
             <Grid item xs={3} sm={2}>
-              <Button onClick={handleCreate} variant="text" color="primary">
+              <Button
+                disabled={visited >= appoiments.length ? false : true}
+                onClick={handleCreate}
+                variant="text"
+                color="primary">
                 Create
               </Button>
             </Grid>
