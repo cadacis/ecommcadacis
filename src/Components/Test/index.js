@@ -15,14 +15,55 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 const Form = (props) => {
-  const totalApoiment = ['Apoiment1', 'Apoiment2', 'Apoiment3'];
-  const patientList = ['patien 1', 'patien2', 'patien3'];
-  const doctorList = ['doctor 1', 'doctor2', 'doctor3'];
-  const tratamentList = ['tratament1', 'tratament2', 'tratament3'];
-  //datos de todos los formularios
+  //Totales de apoiment
+  const totalApoiment = ['Apoiment1', 'Apoiment1', 'Apoiment1'];
+  //Simular lista de pacientes
+  const patientList = [
+    { id: 0, name: 'Patien1' },
+    { id: 1, name: 'Patien1' },
+    { id: 2, name: 'Patien1' },
+  ];
+  //Simular lista de doctores
+  const doctorList = [
+    { id: 0, name: 'Doctor1' },
+    { id: 1, name: 'Doctor2' },
+    { id: 2, name: 'Doctor3' },
+  ];
+  //Simular lista de tratamientos
+  const tratamentList = [
+    { id: 0, name: 'Tratament1' },
+    { id: 1, name: 'Tratament2' },
+    { id: 2, name: 'Tratament3' },
+  ];
+  //Autocomplete apoiment inicial por default
+  var initial = {
+    no: 0,
+    apoiment: totalApoiment[0],
+    date: new Date(),
+    from: new Date(),
+    to: new Date(),
+    patien: 0,
+    doctor: 0,
+    tratament: 0,
+  };
+  //Modificando apoiment inicial por default si se pasa por props
+  if (props.data) {
+    initial.date = props.data.date || new Date();
+    initial.from = props.data.from || new Date();
+    initial.to = props.data.to || new Date();
+    initial.patien = props.data.date || 0;
+    initial.doctor = props.data.date || 0;
+    initial.tratament = props.data.date || 0;
+  }
 
+  //Variable de estado para el check
+  const [autoShedule, setAutoShedule] = React.useState(true);
+  //variable de estado para iniciado con un array de objetos un objeto para cada formulario y el primero viene de props y sino lo toma por default
   const [apoiments, setApoiments] = React.useState(
     totalApoiment.map((item, key) => {
+      if (key == 0) {
+        return initial;
+      }
       return {
         no: key,
         apoiment: item,
@@ -32,14 +73,13 @@ const Form = (props) => {
         patien: 0,
         doctor: 0,
         tratament: 0,
-        autoShedule: false,
       };
     }),
   );
-  //Formulario actual
+  //Este es el objeto perteneciente al formulario que se muestra en pantalla y el valor inicial es el objeto cero de la lista que viene de props o por default
   const [currents, setCurrents] = React.useState(apoiments[0]);
 
-  //Subir form
+  //Actualiza el objeto correspondiente a currens en la lista de los tres objetos apoiments general y Pasa al siguiente formulario seteando en current el siguiente objeto de la lista
   const nextApoiment = () => {
     if (currents.no == apoiments.length - 1) {
       return;
@@ -49,7 +89,7 @@ const Form = (props) => {
     setApoiments(updateListApoiment);
     setCurrents(apoiments[currents.no + 1]);
   };
-  //Bajar Form
+  //Identico a nextApoiment pero hacia atras
   const previewsApoiment = () => {
     if (currents.no == 0) {
       return;
@@ -59,36 +99,56 @@ const Form = (props) => {
     setApoiments(updateListApoiment);
     setCurrents(apoiments[currents.no - 1]);
   };
+  //Manejador de el boton crear muestra la lista de apoiments por consola y luego la pasa al objeto padre con una funcion que viene de props getData
   const handleCreate = () => {
+    //Si autoSchudle disabled envia el array solo con la posicion 0
+    if (!autoShedule) {
+      const value = [apoiments[0]];
+      console.log(value);
+      props.getData(value);
+      props.handleClose();
+      return;
+    }
     console.log(apoiments);
     props.getData(apoiments);
     props.handleClose();
   };
+  //manejadores de input
   const handleChangeDate = (value) => {
     setCurrents({ ...currents, date: value });
   };
+  //manejadores de input
   const handleChangeFrom = (value) => {
     setCurrents({ ...currents, from: value });
   };
+  //manejadores de input
   const handleChangeTo = (value) => {
     setCurrents({ ...currents, to: value });
   };
+  //manejadores de input
   const handleChangePatien = (e) => {
     const value = e.target.value;
     setCurrents({ ...currents, patien: value });
   };
+  //manejadores de input
   const handleChangeDoctor = (e) => {
     const value = e.target.value;
     setCurrents({ ...currents, doctor: value });
   };
+  //manejadores de input
   const handleChangeTratament = (e) => {
     const value = e.target.value;
     setCurrents({ ...currents, tratament: value });
   };
+  const handleAutoSchudle = (event) => {
+    const value = event.target.checked;
+    setAutoShedule(value);
+  };
+
   return (
     <Box sx={{ p: 4 }}>
       <Typography variant="h5" color="initial">
-        {currents.apoiment}
+        {currents.apoiment} {/*de current optiene el nombre del form*/}
       </Typography>
       <Box sx={{ mt: 2 }}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -139,8 +199,8 @@ const Form = (props) => {
                   onChange={handleChangePatien}>
                   {patientList.map((item, key) => {
                     return (
-                      <MenuItem key={key} value={key}>
-                        {item}
+                      <MenuItem key={key} value={item.id}>
+                        {item.name}
                       </MenuItem>
                     );
                   })}
@@ -161,8 +221,8 @@ const Form = (props) => {
                   onChange={handleChangeDoctor}>
                   {doctorList.map((item, key) => {
                     return (
-                      <MenuItem key={key} value={key}>
-                        {item}
+                      <MenuItem key={key} value={item.id}>
+                        {item.name}
                       </MenuItem>
                     );
                   })}
@@ -183,8 +243,8 @@ const Form = (props) => {
                   onChange={handleChangeTratament}>
                   {tratamentList.map((item, key) => {
                     return (
-                      <MenuItem key={key} value={key}>
-                        {item}
+                      <MenuItem key={key} value={item.id}>
+                        {item.name}
                       </MenuItem>
                     );
                   })}
@@ -193,7 +253,7 @@ const Form = (props) => {
             </Grid>
             <Grid item xs={6}>
               <Box display="flex">
-                <Checkbox defaultChecked />
+                <Checkbox checked={autoShedule} onChange={handleAutoSchudle} />
                 <Typography variant="body1" color="initial">
                   Auto Schedule Appoiments
                 </Typography>
@@ -205,12 +265,18 @@ const Form = (props) => {
               </Button>
             </Grid>
             <Grid item xs={1.5}>
-              <Button variant="text" onClick={previewsApoiment}>
+              <Button
+                disabled={!autoShedule}
+                variant="text"
+                onClick={previewsApoiment}>
                 Back
               </Button>
             </Grid>
             <Grid item xs={1.5}>
-              <Button variant="text" onClick={nextApoiment}>
+              <Button
+                disabled={!autoShedule}
+                variant="text"
+                onClick={nextApoiment}>
                 Next
               </Button>
             </Grid>
