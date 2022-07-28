@@ -51,9 +51,15 @@ const tl = [
 */
 
 const Form = ({ dataInitial, handleClose, handleResult }) => {
+  const minHrs = 'Wed Jul 27 2022 08:00:00 GMT-0500 (Central Daylight Time)';
+  const maxHrs = 'Wed Jul 27 2022 18:01:10 GMT-0500 (Central Daylight Time)';
+
   const [patienList, setPatienList] = React.useState([]);
   const [doctorList, setDoctorList] = React.useState([]);
   const [tratamentList, setTratamentList] = React.useState([]);
+  const [errorDay, setErrorDay] = React.useState(false);
+  const [errorFrom, setErrorFrom] = React.useState(false);
+  const [errorTo, setErrorTo] = React.useState(false);
   const [appoiments, setAppoiments] = React.useState(dataInitial);
   const [countSteep, setCountSteep] = React.useState(1);
   const [currentAppoiment, setCurrentAppoiment] = React.useState(
@@ -67,6 +73,15 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setPatienList(pl);
     setDoctorList(dl);
     setTratamentList(tl);
+  };
+  const onErrorDay = (start, end) => {
+    setErrorDay(true);
+  };
+  const onErrorForm = (start, end) => {
+    setErrorFrom(true);
+  };
+  const onErrorTo = (start, end) => {
+    setErrorTo(true);
   };
   const handleCreate = () => {
     const index = appoiments.findIndex(
@@ -87,12 +102,27 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     handleClose();
   };
   const handleDay = (data) => {
+    setErrorDay(false);
     setCurrentAppoiment({ ...currentAppoiment, date: data });
   };
   const handleFrom = (data) => {
+    setErrorFrom(false);
+    var d1 = new Date(data);
+    d1 = d1.getTime();
+    var d2 = new Date(currentAppoiment.endTime);
+    d2 = d2.getTime();
+    if (d1 > d2) {
+      setCurrentAppoiment({
+        ...currentAppoiment,
+        startTime: data,
+        endTime: data,
+      });
+      return;
+    }
     setCurrentAppoiment({ ...currentAppoiment, startTime: data });
   };
   const handleTo = (data) => {
+    setErrorTo(false);
     setCurrentAppoiment({ ...currentAppoiment, endTime: data });
   };
   const handleAuto = (value) => {
@@ -111,6 +141,11 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
   };
   const handleNext = (value) => {
     if (countSteep == appoiments.length) {
+      return;
+    }
+    console.log(errorDay + '||' + errorFrom + '||' + errorTo);
+    if (errorDay || errorFrom || errorTo) {
+      console.log('here');
       return;
     }
     const index = appoiments.findIndex(
@@ -134,6 +169,9 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setCountSteep(countSteep - 1);
     setAppoiments(appoimentsArr);
     setCurrentAppoiment(appoiments[index - 1]);
+  };
+  const disableWeekend = (date) => {
+    return date.getDay() === 0 || date.getDay() === 6;
   };
 
   const handlePatient = (v) => {
@@ -194,7 +232,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
   }
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 2 }}>
       <Box sx={{ mb: 2 }}>
         <Typography textAlign={'center'} variant="h5" color="initial">
           {currentAppoiment.title}
@@ -207,30 +245,52 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
               <DesktopDatePicker
                 label="Day"
                 inputFormat="MM/dd/yyyy"
+                onError={onErrorDay}
+                shouldDisableDate={disableWeekend}
                 value={new Date(currentAppoiment.date || new Date())}
                 onChange={handleDay}
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    fullWidth
+                    size="small"
+                    readOnly={true}
+                    {...params}
+                  />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="From"
+                onError={onErrorForm}
+                minTime={new Date(minHrs)}
                 value={new Date(currentAppoiment.startTime || new Date())}
                 onChange={handleFrom}
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    readOnly={true}
+                    fullWidth
+                    size="small"
+                    {...params}
+                  />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="To"
+                onError={onErrorTo}
+                minTime={new Date(currentAppoiment.startTime)}
+                maxTime={new Date(maxHrs)}
                 value={new Date(currentAppoiment.endTime || new Date())}
                 onChange={handleTo}
                 renderInput={(params) => (
-                  <TextField fullWidth size="small" {...params} />
+                  <TextField
+                    readOnly={true}
+                    fullWidth
+                    size="small"
+                    {...params}
+                  />
                 )}
               />
             </Grid>
@@ -291,10 +351,10 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12} sm={4}>
               <Box display="flex" sx={{ justifyContent: 'center' }}>
                 <Box>
-                  <Checkbox checked={auto} onChange={handleAuto} />
+                  <Checkbox size="small" checked={auto} onChange={handleAuto} />
                 </Box>
                 <Box
                   sx={{
@@ -306,12 +366,19 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={3} sm={1.5}>
-              <Button onClick={closeForm} variant="text" color="primary">
-                Cancel
-              </Button>
+            <Grid item xs={3} sm={2}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                }}>
+                <Button onClick={closeForm} variant="text" color="primary">
+                  Cancel
+                </Button>
+              </Box>
             </Grid>
-            <Grid item xs={3} sm={1.5}>
+            <Grid item xs={3} sm={2}>
               <Button
                 onClick={handleBack}
                 disabled={!auto || countSteep == 1 ? true : false}
@@ -320,7 +387,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
                 Back
               </Button>
             </Grid>
-            <Grid item xs={3} sm={1.5}>
+            <Grid item xs={3} sm={2}>
               <Button
                 onClick={handleNext}
                 disabled={
@@ -331,7 +398,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
                 Next
               </Button>
             </Grid>
-            <Grid item xs={3} sm={1.5}>
+            <Grid item xs={3} sm={2}>
               <Button onClick={handleCreate} variant="text" color="primary">
                 Create
               </Button>
