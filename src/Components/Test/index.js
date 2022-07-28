@@ -84,13 +84,14 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setErrorTo(true);
   };
   const handleCreate = () => {
+    if (errorDay || errorFrom || errorTo) {
+      return;
+    }
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
-
     var appoimentsArr = appoiments;
     appoimentsArr[index] = currentAppoiment;
-
     setAppoiments(appoimentsArr);
 
     if (!auto) {
@@ -143,9 +144,8 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     if (countSteep == appoiments.length) {
       return;
     }
-    console.log(errorDay + '||' + errorFrom + '||' + errorTo);
+
     if (errorDay || errorFrom || errorTo) {
-      console.log('here');
       return;
     }
     const index = appoiments.findIndex(
@@ -159,6 +159,9 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
   };
   const handleBack = (value) => {
     if (countSteep == 1) {
+      return;
+    }
+    if (errorDay || errorFrom || errorTo) {
       return;
     }
     const index = appoiments.findIndex(
