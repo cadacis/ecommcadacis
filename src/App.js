@@ -20,6 +20,7 @@ import {Lists} from "./Components/listComponent.jsx"
 import {Graphics} from "./Components/listComponent.jsx"
 import {Search} from "./Components/listComponent.jsx"
 import {DashboardTest} from "./Components/listComponent.jsx"
+import {Test} from "./Components/listComponent.jsx"
 /**********************************************************************************************************/
 
 import {useDispatch} from "react-redux"
@@ -27,6 +28,7 @@ import {getCart} from "./redux/actions/cart"
 /*********************************************************************************************************/
 var routes = [
   { element: <Home/>, path: '/' },
+  { element: <Test/>, path: '/test' },
   { element: <SmallCart/>, path: '/cart/small' },
   { element: <StandarCart/>, path: '/cart' },
   { element: <Checkout/>, path: '/checkout' },

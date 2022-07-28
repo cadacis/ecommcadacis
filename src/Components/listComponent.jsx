@@ -11,6 +11,7 @@ import Lists from './Lists';
 import Graphics from './Graphics';
 import Search from './Search';
 import DashboardTest from './DashBoard';
+import Test from './Test';
 /**********************************************************/
 export {
   DashboardTest,
@@ -26,4 +27,5 @@ export {
   Lists,
   Shop,
   Graphics,
+  Test,
 };
