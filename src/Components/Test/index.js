@@ -50,7 +50,7 @@ const tl = [
     },
 */
 
-const Form = ({ dataInitial, handleClose }) => {
+const Form = ({ dataInitial, handleClose, handleResult }) => {
   const [patienList, setPatienList] = React.useState([]);
   const [doctorList, setDoctorList] = React.useState([]);
   const [tratamentList, setTratamentList] = React.useState([]);
@@ -67,6 +67,24 @@ const Form = ({ dataInitial, handleClose }) => {
     setPatienList(pl);
     setDoctorList(dl);
     setTratamentList(tl);
+  };
+  const handleCreate = () => {
+    const index = appoiments.findIndex(
+      (item) => item.id == currentAppoiment.id,
+    );
+
+    var appoimentsArr = appoiments;
+    appoimentsArr[index] = currentAppoiment;
+
+    setAppoiments(appoimentsArr);
+
+    if (!auto) {
+      handleResult([appoiments[0]]);
+    } else {
+      handleResult(appoiments);
+    }
+
+    handleClose();
   };
   const handleDay = (data) => {
     setCurrentAppoiment({ ...currentAppoiment, date: data });
@@ -306,7 +324,7 @@ const Form = ({ dataInitial, handleClose }) => {
               </Button>
             </Grid>
             <Grid item xs={3} sm={1.5}>
-              <Button variant="text" color="primary">
+              <Button onClick={handleCreate} variant="text" color="primary">
                 Create
               </Button>
             </Grid>
@@ -319,6 +337,7 @@ const Form = ({ dataInitial, handleClose }) => {
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState([]);
   const handleClose = () => {
     setOpen(!open);
   };
@@ -371,15 +390,34 @@ const Index = () => {
       autoSchedule: 'on',
     },
   ];
+  const handleResult = (data) => {
+    console.log(data.length);
 
+    setData(data);
+  };
   return (
     <Box>
       <Dialog onClose={handleClose} open={open}>
-        <Form handleClose={handleClose} dataInitial={calendar} />
+        <Form
+          handleResult={handleResult}
+          handleClose={handleClose}
+          dataInitial={calendar}
+        />
       </Dialog>
       <Button variant="contained" color="primary" onClick={handleClose}>
         Create Appoiment
       </Button>
+      <Box sx={{ mt: 3 }}>
+        {data.length == 0
+          ? 'No data'
+          : data.map((item, key) => {
+              return (
+                <div key={key}>
+                  <pre>{JSON.stringify(item, null, 2)}</pre>
+                </div>
+              );
+            })}
+      </Box>
     </Box>
   );
 };
