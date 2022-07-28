@@ -16,12 +16,12 @@ import Checkbox from '@mui/material/Checkbox';
 import Dialog from '@mui/material/Dialog';
 const Form = (props) => {
   //Totales de apoiment
-  const totalApoiment = ['Apoiment1', 'Apoiment1', 'Apoiment1'];
+  const totalApoiment = ['Apoiment1', 'Apoiment2', 'Apoiment3'];
   //Simular lista de pacientes
   const patientList = [
     { id: 0, name: 'Patien1' },
-    { id: 1, name: 'Patien1' },
-    { id: 2, name: 'Patien1' },
+    { id: 1, name: 'Patien2' },
+    { id: 2, name: 'Patien3' },
   ];
   //Simular lista de doctores
   const doctorList = [
@@ -109,8 +109,10 @@ const Form = (props) => {
       props.handleClose();
       return;
     }
-    console.log(apoiments);
-    props.getData(apoiments);
+    var updateListApoiment = apoiments;
+    updateListApoiment[currents.no] = currents;
+    setApoiments(updateListApoiment);
+    props.getData(updateListApoiment);
     props.handleClose();
   };
   //manejadores de input
@@ -142,6 +144,9 @@ const Form = (props) => {
   };
   const handleAutoSchudle = (event) => {
     const value = event.target.checked;
+    if (!value) {
+      setCurrents(apoiments[0]);
+    }
     setAutoShedule(value);
   };
 
@@ -251,7 +256,7 @@ const Form = (props) => {
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={12} sm={6}>
               <Box display="flex">
                 <Checkbox checked={autoShedule} onChange={handleAutoSchudle} />
                 <Typography variant="body1" color="initial">
@@ -259,12 +264,12 @@ const Form = (props) => {
                 </Typography>
               </Box>
             </Grid>
-            <Grid item xs={1.5}>
+            <Grid item xs={3} sm={1.5}>
               <Button variant="text" onClick={props.handleClose}>
                 Cancel
               </Button>
             </Grid>
-            <Grid item xs={1.5}>
+            <Grid item xs={3} sm={1.5}>
               <Button
                 disabled={!autoShedule}
                 variant="text"
@@ -272,7 +277,7 @@ const Form = (props) => {
                 Back
               </Button>
             </Grid>
-            <Grid item xs={1.5}>
+            <Grid item xs={3} sm={1.5}>
               <Button
                 disabled={!autoShedule}
                 variant="text"
@@ -280,7 +285,7 @@ const Form = (props) => {
                 Next
               </Button>
             </Grid>
-            <Grid item xs={1.5}>
+            <Grid item xs={3} sm={1.5}>
               <Button variant="text" onClick={handleCreate}>
                 Create
               </Button>
@@ -295,15 +300,18 @@ const Form = (props) => {
 const Index = () => {
   const [open, setOpen] = React.useState(false);
   const [data, setData] = React.useState([]);
+
   const handleClose = () => {
     setOpen(!open);
   };
-  const getData = (data) => {
-    var datan = data.map((item, key) => {
-      return JSON.stringify(data);
+  const getData = (externaldata) => {
+    console.log(externaldata);
+    var datan = externaldata.map((item, key) => {
+      return JSON.stringify(item);
     });
     setData(datan.toString());
   };
+
   return (
     <Box sx={{ mt: 20 }}>
       <Dialog onClose={handleClose} open={open}>
