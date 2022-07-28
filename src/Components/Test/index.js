@@ -137,7 +137,11 @@ const Form = (props) => {
                   label="Patient"
                   onChange={handleChangePatien}>
                   {patientList.map((item, key) => {
-                    return <MenuItem value={key}>{item}</MenuItem>;
+                    return (
+                      <MenuItem key={key} value={key}>
+                        {item}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -155,7 +159,11 @@ const Form = (props) => {
                   label="Doctor"
                   onChange={handleChangeDoctor}>
                   {doctorList.map((item, key) => {
-                    return <MenuItem value={key}>{item}</MenuItem>;
+                    return (
+                      <MenuItem key={key} value={key}>
+                        {item}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
@@ -173,7 +181,11 @@ const Form = (props) => {
                   label="Tratamens"
                   onChange={handleChangeTratament}>
                   {tratamentList.map((item, key) => {
-                    return <MenuItem value={key}>{item}</MenuItem>;
+                    return (
+                      <MenuItem key={key} value={key}>
+                        {item}
+                      </MenuItem>
+                    );
                   })}
                 </Select>
               </FormControl>
