@@ -18,22 +18,22 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 //Simular listas
 const pl = [
-  { id: 0, name: 'patien1' },
-  { id: 1, name: 'patien2' },
-  { id: 2, name: 'patien3' },
-  { id: 3, name: 'patien4' },
+  { id: 1, name: 'patien1' },
+  { id: 2, name: 'patien2' },
+  { id: 3, name: 'patien3' },
+  { id: 4, name: 'patien4' },
 ];
 const dl = [
-  { id: 0, name: 'doctor1' },
-  { id: 1, name: 'doctor2' },
-  { id: 2, name: 'doctor3' },
-  { id: 3, name: 'doctor4' },
+  { id: 1, name: 'doctor1' },
+  { id: 2, name: 'doctor2' },
+  { id: 3, name: 'doctor3' },
+  { id: 4, name: 'doctor4' },
 ];
 const tl = [
-  { id: 0, name: 'tratament1' },
-  { id: 1, name: 'tratament2' },
-  { id: 2, name: 'tratament3' },
-  { id: 3, name: 'tratament4' },
+  { id: 1, name: 'tratament1' },
+  { id: 2, name: 'tratament2' },
+  { id: 3, name: 'tratament3' },
+  { id: 4, name: 'tratament4' },
 ];
 
 // Data inicial espera esta estructura
@@ -54,8 +54,11 @@ const Form = ({ dataInitial, handleClose }) => {
   const [patienList, setPatienList] = React.useState([]);
   const [doctorList, setDoctorList] = React.useState([]);
   const [tratamentList, setTratamentList] = React.useState([]);
-  const [appoiments, setApoiments] = React.useState(dataInitial);
-  const [currentAppoiment, setCurrentAppoiment] = React.useState(0);
+  const [appoiments, setAppoiments] = React.useState(dataInitial);
+  const [countSteep, setCountSteep] = React.useState(1);
+  const [currentAppoiment, setCurrentAppoiment] = React.useState(
+    dataInitial[0],
+  );
 
   const [auto, setAuto] = React.useState(true);
 
@@ -65,25 +68,63 @@ const Form = ({ dataInitial, handleClose }) => {
     setDoctorList(dl);
     setTratamentList(tl);
   };
+  const handleDay = (data) => {
+    setCurrentAppoiment({ ...currentAppoiment, date: data });
+  };
+  const handleFrom = (data) => {
+    setCurrentAppoiment({ ...currentAppoiment, startTime: data });
+  };
+  const handleTo = (data) => {
+    setCurrentAppoiment({ ...currentAppoiment, endTime: data });
+  };
   const handleAuto = (value) => {
     var value_ = value.target.checked;
-    setCurrentAppoiment(0);
+    setCurrentAppoiment(appoiments[0]);
+    setCountSteep(1);
     setAuto(value_);
   };
   const handleNext = (value) => {
-    if (currentAppoiment + 1 == appoiments.length) {
+    if (countSteep == appoiments.length) {
       return;
     }
-
-    setCurrentAppoiment(currentAppoiment + 1);
+    const index = appoiments.findIndex(
+      (item) => item.id == currentAppoiment.id,
+    );
+    var appoimentsArr = appoiments;
+    appoimentsArr[index] = currentAppoiment;
+    setAppoiments(appoimentsArr);
+    setCountSteep(countSteep + 1);
+    setCurrentAppoiment(appoiments[index + 1]);
   };
   const handleBack = (value) => {
-    if (currentAppoiment == 0) {
+    if (countSteep == 1) {
       return;
     }
-
-    setCurrentAppoiment(currentAppoiment - 1);
+    const index = appoiments.findIndex(
+      (item) => item.id == currentAppoiment.id,
+    );
+    var appoimentsArr = appoiments;
+    appoimentsArr[index] = currentAppoiment;
+    setCountSteep(countSteep - 1);
+    setAppoiments(appoimentsArr);
+    setCurrentAppoiment(appoiments[index - 1]);
   };
+
+  const handlePatient = (v) => {
+    var data = v.target.value;
+    setCurrentAppoiment({ ...currentAppoiment, patient: data });
+  };
+
+  const handleDoctor = (v) => {
+    var data = v.target.value;
+    setCurrentAppoiment({ ...currentAppoiment, doctor: data });
+  };
+
+  const handleTratament = (v) => {
+    var data = v.target.value;
+    setCurrentAppoiment({ ...currentAppoiment, treatment: data });
+  };
+
   const closeForm = () => {
     handleClose();
   };
@@ -130,7 +171,7 @@ const Form = ({ dataInitial, handleClose }) => {
     <Box sx={{ p: 4 }}>
       <Box sx={{ mb: 2 }}>
         <Typography textAlign={'center'} variant="h5" color="initial">
-          {appoiments[currentAppoiment].title}
+          {currentAppoiment.title}
         </Typography>
       </Box>
       <Box>
@@ -140,10 +181,8 @@ const Form = ({ dataInitial, handleClose }) => {
               <DesktopDatePicker
                 label="Day"
                 inputFormat="MM/dd/yyyy"
-                value={
-                  new Date(appoiments[currentAppoiment].date || new Date())
-                }
-                /* onChange={handleChange} */
+                value={new Date(currentAppoiment.date || new Date())}
+                onChange={handleDay}
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
@@ -152,10 +191,8 @@ const Form = ({ dataInitial, handleClose }) => {
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="From"
-                value={
-                  new Date(appoiments[currentAppoiment].startTime || new Date())
-                }
-                /* onChange={handleChange} */
+                value={new Date(currentAppoiment.startTime || new Date())}
+                onChange={handleFrom}
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
@@ -164,10 +201,8 @@ const Form = ({ dataInitial, handleClose }) => {
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="To"
-                value={
-                  new Date(appoiments[currentAppoiment].endTime || new Date())
-                }
-                /* onChange={handleChange} */
+                value={new Date(currentAppoiment.endTime || new Date())}
+                onChange={handleTo}
                 renderInput={(params) => (
                   <TextField fullWidth size="small" {...params} />
                 )}
@@ -179,10 +214,9 @@ const Form = ({ dataInitial, handleClose }) => {
                 <Select
                   labelId="patien"
                   id="patien"
-                  value={appoiments[currentAppoiment].patient}
+                  value={currentAppoiment.patient}
                   label="Patien"
-                  /* onChange={handleChange} */
-                >
+                  onChange={handlePatient}>
                   {patienList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
@@ -199,10 +233,9 @@ const Form = ({ dataInitial, handleClose }) => {
                 <Select
                   labelId="doctor"
                   id="doctor"
-                  value={appoiments[currentAppoiment].doctor}
+                  value={currentAppoiment.doctor}
                   label="Doctor"
-                  /* onChange={handleChange} */
-                >
+                  onChange={handleDoctor}>
                   {doctorList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
@@ -219,10 +252,9 @@ const Form = ({ dataInitial, handleClose }) => {
                 <Select
                   labelId="tratament"
                   id="tratament"
-                  value={appoiments[currentAppoiment].treatment}
+                  value={currentAppoiment.treatment}
                   label="Tratament"
-                  /* onChange={handleChange} */
-                >
+                  onChange={handleTratament}>
                   {tratamentList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
@@ -256,7 +288,7 @@ const Form = ({ dataInitial, handleClose }) => {
             <Grid item xs={3} sm={1.5}>
               <Button
                 onClick={handleBack}
-                disabled={!auto || currentAppoiment == 0 ? true : false}
+                disabled={!auto || countSteep == 1 ? true : false}
                 variant="text"
                 color="primary">
                 Back
@@ -266,9 +298,7 @@ const Form = ({ dataInitial, handleClose }) => {
               <Button
                 onClick={handleNext}
                 disabled={
-                  !auto || currentAppoiment == appoiments.length - 1
-                    ? true
-                    : false
+                  !auto || countSteep == appoiments.length ? true : false
                 }
                 variant="text"
                 color="primary">
@@ -298,49 +328,50 @@ const Index = () => {
   const calendar = [
     {
       title: 'New Appointment',
-      id: 0,
+      id: 1,
       date: 'Wed Jul 27 2022 14:05:20 GMT-0500 (Central Daylight Time)',
       startTime: 'Wed Jul 27 2022 15:05:20 GMT-0500 (Central Daylight Time)',
       endTime: 'Wed Jul 27 2022 15:05:20 GMT-0500 (Central Daylight Time)',
-      patient: 0,
-      doctor: 0,
-      treatment: 0,
-      autoSchedule: 'on',
-    },
-    {
-      title: 'First',
-      id: 1,
-      date: 'Wed Jul 28 2022 14:05:20 GMT-0500 (Central Daylight Time)',
-      startTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
-      endTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
       patient: 1,
       doctor: 1,
       treatment: 1,
       autoSchedule: 'on',
     },
     {
-      title: 'Second',
+      title: 'First',
       id: 2,
-      date: 'Wed Jul 29 2022 14:05:20 GMT-0500 (Central Daylight Time)',
-      startTime: 'Wed Jul 27 2022 17 :05:20 GMT-0500 (Central Daylight Time)',
-      endTime: 'Wed Jul 27 2022 17:05:20 GMT-0500 (Central Daylight Time)',
+      date: 'Wed Jul 28 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
       patient: 2,
       doctor: 2,
       treatment: 2,
       autoSchedule: 'on',
     },
     {
-      title: 'Third',
+      title: 'Second',
       id: 3,
-      date: 'Wed Jul 30 2022 14:05:20 GMT-0500 (Central Daylight Time)',
-      startTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
-      endTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
+      date: 'Wed Jul 29 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 27 2022 17 :05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 27 2022 17:05:20 GMT-0500 (Central Daylight Time)',
       patient: 3,
       doctor: 3,
       treatment: 3,
       autoSchedule: 'on',
     },
+    {
+      title: 'Third',
+      id: 4,
+      date: 'Wed Jul 30 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
+      patient: 4,
+      doctor: 4,
+      treatment: 4,
+      autoSchedule: 'on',
+    },
   ];
+
   return (
     <Box>
       <Dialog onClose={handleClose} open={open}>
