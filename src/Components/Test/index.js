@@ -3,206 +3,187 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Button from '@mui/material/Button';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import Checkbox from '@mui/material/Checkbox';
+import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
-const Form = (props) => {
-  //Totales de apoiment
-  const totalApoiment = ['Apoiment1', 'Apoiment2', 'Apoiment3'];
-  //Simular lista de pacientes
-  const patientList = [
-    { id: 0, name: 'Patien1' },
-    { id: 1, name: 'Patien2' },
-    { id: 2, name: 'Patien3' },
-  ];
-  //Simular lista de doctores
-  const doctorList = [
-    { id: 0, name: 'Doctor1' },
-    { id: 1, name: 'Doctor2' },
-    { id: 2, name: 'Doctor3' },
-  ];
-  //Simular lista de tratamientos
-  const tratamentList = [
-    { id: 0, name: 'Tratament1' },
-    { id: 1, name: 'Tratament2' },
-    { id: 2, name: 'Tratament3' },
-  ];
-  //Autocomplete apoiment inicial por default
-  var initial = {
-    no: 0,
-    apoiment: totalApoiment[0],
-    date: new Date(),
-    from: new Date(),
-    to: new Date(),
-    patien: 0,
-    doctor: 0,
-    tratament: 0,
+import CircularProgress from '@mui/material/CircularProgress';
+
+//Simular listas
+const pl = [
+  { id: 0, name: 'patien1' },
+  { id: 1, name: 'patien2' },
+  { id: 2, name: 'patien3' },
+  { id: 3, name: 'patien4' },
+];
+const dl = [
+  { id: 0, name: 'doctor1' },
+  { id: 1, name: 'doctor2' },
+  { id: 2, name: 'doctor3' },
+  { id: 3, name: 'doctor4' },
+];
+const tl = [
+  { id: 0, name: 'tratament1' },
+  { id: 1, name: 'tratament2' },
+  { id: 2, name: 'tratament3' },
+  { id: 3, name: 'tratament4' },
+];
+
+// Data inicial espera esta estructura
+/*   {
+        title: "New Appointment",
+        id: "example id",
+        date: "Wed Jul 27 2022 14:05:20 GMT-0500 (Central Daylight Time)",
+        startTime: "Wed Jul 27 2022 14:05:20 GMT-0500 (Central Daylight Time)",
+        endTime: "Wed Jul 27 2022 14:05:20 GMT-0500 (Central Daylight Time)",
+        patient: "Carmen",
+        doctor: "Dr. Lopez",
+        treatment: "Coffee for your heart",
+        autoSchedule: "on",
+    },
+*/
+
+const Form = ({ dataInitial, handleClose }) => {
+  const [patienList, setPatienList] = React.useState([]);
+  const [doctorList, setDoctorList] = React.useState([]);
+  const [tratamentList, setTratamentList] = React.useState([]);
+  const [appoiments, setApoiments] = React.useState(dataInitial);
+  const [currentAppoiment, setCurrentAppoiment] = React.useState(0);
+
+  const [auto, setAuto] = React.useState(true);
+
+  const getList = async () => {
+    //Obtener listas desde el server asyncronicas
+    setPatienList(pl);
+    setDoctorList(dl);
+    setTratamentList(tl);
   };
-  //Modificando apoiment inicial por default si se pasa por props
-  if (props.data) {
-    initial.date = props.data.date || new Date();
-    initial.from = props.data.from || new Date();
-    initial.to = props.data.to || new Date();
-    initial.patien = props.data.date || 0;
-    initial.doctor = props.data.date || 0;
-    initial.tratament = props.data.date || 0;
+  const handleAuto = (value) => {
+    var value_ = value.target.checked;
+    setCurrentAppoiment(0);
+    setAuto(value_);
+  };
+  const handleNext = (value) => {
+    if (currentAppoiment + 1 == appoiments.length) {
+      return;
+    }
+
+    setCurrentAppoiment(currentAppoiment + 1);
+  };
+  const handleBack = (value) => {
+    if (currentAppoiment == 0) {
+      return;
+    }
+
+    setCurrentAppoiment(currentAppoiment - 1);
+  };
+  const closeForm = () => {
+    handleClose();
+  };
+
+  React.useEffect(() => {
+    getList();
+    return () => {
+      console.log('clear');
+    };
+  }, []);
+
+  if (patienList.length == 0) {
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+        <Box>Esperando lista de pacientes</Box>
+      </Box>
+    );
   }
-
-  //Variable de estado para el check
-  const [autoShedule, setAutoShedule] = React.useState(true);
-  //variable de estado para iniciado con un array de objetos un objeto para cada formulario y el primero viene de props y sino lo toma por default
-  const [apoiments, setApoiments] = React.useState(
-    totalApoiment.map((item, key) => {
-      if (key == 0) {
-        return initial;
-      }
-      return {
-        no: key,
-        apoiment: item,
-        date: new Date(),
-        from: new Date(),
-        to: new Date(),
-        patien: 0,
-        doctor: 0,
-        tratament: 0,
-      };
-    }),
-  );
-  //Este es el objeto perteneciente al formulario que se muestra en pantalla y el valor inicial es el objeto cero de la lista que viene de props o por default
-  const [currents, setCurrents] = React.useState(apoiments[0]);
-
-  //Actualiza el objeto correspondiente a currens en la lista de los tres objetos apoiments general y Pasa al siguiente formulario seteando en current el siguiente objeto de la lista
-  const nextApoiment = () => {
-    if (currents.no == apoiments.length - 1) {
-      return;
-    }
-    var updateListApoiment = apoiments;
-    updateListApoiment[currents.no] = currents;
-    setApoiments(updateListApoiment);
-    setCurrents(apoiments[currents.no + 1]);
-  };
-  //Identico a nextApoiment pero hacia atras
-  const previewsApoiment = () => {
-    if (currents.no == 0) {
-      return;
-    }
-    var updateListApoiment = apoiments;
-    updateListApoiment[currents.no] = currents;
-    setApoiments(updateListApoiment);
-    setCurrents(apoiments[currents.no - 1]);
-  };
-  //Manejador de el boton crear muestra la lista de apoiments por consola y luego la pasa al objeto padre con una funcion que viene de props getData
-  const handleCreate = () => {
-    //Si autoSchudle disabled envia el array solo con la posicion 0
-    if (!autoShedule) {
-      const value = [apoiments[0]];
-      console.log(value);
-      props.getData(value);
-      props.handleClose();
-      return;
-    }
-    var updateListApoiment = apoiments;
-    updateListApoiment[currents.no] = currents;
-    setApoiments(updateListApoiment);
-    props.getData(updateListApoiment);
-    props.handleClose();
-  };
-  //manejadores de input
-  const handleChangeDate = (value) => {
-    setCurrents({ ...currents, date: value });
-  };
-  //manejadores de input
-  const handleChangeFrom = (value) => {
-    setCurrents({ ...currents, from: value });
-  };
-  //manejadores de input
-  const handleChangeTo = (value) => {
-    setCurrents({ ...currents, to: value });
-  };
-  //manejadores de input
-  const handleChangePatien = (e) => {
-    const value = e.target.value;
-    setCurrents({ ...currents, patien: value });
-  };
-  //manejadores de input
-  const handleChangeDoctor = (e) => {
-    const value = e.target.value;
-    setCurrents({ ...currents, doctor: value });
-  };
-  //manejadores de input
-  const handleChangeTratament = (e) => {
-    const value = e.target.value;
-    setCurrents({ ...currents, tratament: value });
-  };
-  const handleAutoSchudle = (event) => {
-    const value = event.target.checked;
-    if (!value) {
-      setCurrents(apoiments[0]);
-    }
-    setAutoShedule(value);
-  };
+  if (doctorList.length == 0) {
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+        <Box>Esperando lista de doctores</Box>
+      </Box>
+    );
+  }
+  if (tratamentList.length == 0) {
+    return (
+      <Box>
+        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+          <CircularProgress />
+        </Box>
+        <Box>Esperando lista de tratamientos</Box>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h5" color="initial">
-        {currents.apoiment} {/*de current optiene el nombre del form*/}
-      </Typography>
-      <Box sx={{ mt: 2 }}>
+      <Box sx={{ mb: 2 }}>
+        <Typography textAlign={'center'} variant="h5" color="initial">
+          {appoiments[currentAppoiment].title}
+        </Typography>
+      </Box>
+      <Box>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={5}>
               <DesktopDatePicker
-                label="Date desktop"
+                label="Day"
                 inputFormat="MM/dd/yyyy"
-                value={currents.date}
-                fullWidth
-                onChange={handleChangeDate}
+                value={
+                  new Date(appoiments[currentAppoiment].date || new Date())
+                }
+                /* onChange={handleChange} */
                 renderInput={(params) => (
-                  <TextField {...params} size="small" fullWidth />
+                  <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="From"
-                value={currents.from}
-                onChange={handleChangeFrom}
+                value={
+                  new Date(appoiments[currentAppoiment].startTime || new Date())
+                }
+                /* onChange={handleChange} */
                 renderInput={(params) => (
-                  <TextField {...params} size="small" fullWidth />
+                  <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
             <Grid item xs={6} sm={3.5}>
               <TimePicker
                 label="To"
-                value={currents.to}
-                onChange={handleChangeTo}
+                value={
+                  new Date(appoiments[currentAppoiment].endTime || new Date())
+                }
+                /* onChange={handleChange} */
                 renderInput={(params) => (
-                  <TextField {...params} size="small" fullWidth />
+                  <TextField fullWidth size="small" {...params} />
                 )}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id={'input-patient-' + currents.no}>
-                  Patient
-                </InputLabel>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="patien">Patien</InputLabel>
                 <Select
-                  size="small"
-                  labelId={'labelid-patient-' + currents.no}
-                  id={'id-patient-' + currents.no}
-                  value={currents.patien}
-                  label="Patient"
-                  onChange={handleChangePatien}>
-                  {patientList.map((item, key) => {
+                  labelId="patien"
+                  id="patien"
+                  value={appoiments[currentAppoiment].patient}
+                  label="Patien"
+                  /* onChange={handleChange} */
+                >
+                  {patienList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
                         {item.name}
@@ -213,17 +194,15 @@ const Form = (props) => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id={'input-doctor-' + currents.no}>
-                  Doctor
-                </InputLabel>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="doctor">Doctor</InputLabel>
                 <Select
-                  size="small"
-                  labelId={'labelid-doctor-' + currents.no}
-                  id={'id-doctor-' + currents.no}
-                  value={currents.doctor}
+                  labelId="doctor"
+                  id="doctor"
+                  value={appoiments[currentAppoiment].doctor}
                   label="Doctor"
-                  onChange={handleChangeDoctor}>
+                  /* onChange={handleChange} */
+                >
                   {doctorList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
@@ -235,17 +214,15 @@ const Form = (props) => {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id={'input-trat-' + currents.no}>
-                  Tratament
-                </InputLabel>
+              <FormControl size="small" fullWidth>
+                <InputLabel id="tratament">Tratament</InputLabel>
                 <Select
-                  size="small"
-                  labelId={'labelid-tratament-' + currents.no}
-                  id={'id-tratament-' + currents.no}
-                  value={currents.tratament}
-                  label="Tratamens"
-                  onChange={handleChangeTratament}>
+                  labelId="tratament"
+                  id="tratament"
+                  value={appoiments[currentAppoiment].treatment}
+                  label="Tratament"
+                  /* onChange={handleChange} */
+                >
                   {tratamentList.map((item, key) => {
                     return (
                       <MenuItem key={key} value={item.id}>
@@ -257,36 +234,49 @@ const Form = (props) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Box display="flex">
-                <Checkbox checked={autoShedule} onChange={handleAutoSchudle} />
-                <Typography variant="body1" color="initial">
-                  Auto Schedule Appoiments
-                </Typography>
+              <Box display="flex" sx={{ justifyContent: 'center' }}>
+                <Box>
+                  <Checkbox checked={auto} onChange={handleAuto} />
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                  }}>
+                  Automate Schudle
+                </Box>
               </Box>
             </Grid>
             <Grid item xs={3} sm={1.5}>
-              <Button variant="text" onClick={props.handleClose}>
+              <Button onClick={closeForm} variant="text" color="primary">
                 Cancel
               </Button>
             </Grid>
             <Grid item xs={3} sm={1.5}>
               <Button
-                disabled={!autoShedule}
+                onClick={handleBack}
+                disabled={!auto || currentAppoiment == 0 ? true : false}
                 variant="text"
-                onClick={previewsApoiment}>
+                color="primary">
                 Back
               </Button>
             </Grid>
             <Grid item xs={3} sm={1.5}>
               <Button
-                disabled={!autoShedule}
+                onClick={handleNext}
+                disabled={
+                  !auto || currentAppoiment == appoiments.length - 1
+                    ? true
+                    : false
+                }
                 variant="text"
-                onClick={nextApoiment}>
+                color="primary">
                 Next
               </Button>
             </Grid>
             <Grid item xs={3} sm={1.5}>
-              <Button variant="text" onClick={handleCreate}>
+              <Button variant="text" color="primary">
                 Create
               </Button>
             </Grid>
@@ -299,32 +289,67 @@ const Form = (props) => {
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
-  const [data, setData] = React.useState([]);
-
   const handleClose = () => {
     setOpen(!open);
   };
-  const getData = (externaldata) => {
-    console.log(externaldata);
-    var datan = externaldata.map((item, key) => {
-      return JSON.stringify(item);
-    });
-    setData(datan.toString());
-  };
 
+  //Simular data inicial
+
+  const calendar = [
+    {
+      title: 'New Appointment',
+      id: 0,
+      date: 'Wed Jul 27 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 27 2022 15:05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 27 2022 15:05:20 GMT-0500 (Central Daylight Time)',
+      patient: 0,
+      doctor: 0,
+      treatment: 0,
+      autoSchedule: 'on',
+    },
+    {
+      title: 'First',
+      id: 1,
+      date: 'Wed Jul 28 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 28 2022 16:05:20 GMT-0500 (Central Daylight Time)',
+      patient: 1,
+      doctor: 1,
+      treatment: 1,
+      autoSchedule: 'on',
+    },
+    {
+      title: 'Second',
+      id: 2,
+      date: 'Wed Jul 29 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 27 2022 17 :05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 27 2022 17:05:20 GMT-0500 (Central Daylight Time)',
+      patient: 2,
+      doctor: 2,
+      treatment: 2,
+      autoSchedule: 'on',
+    },
+    {
+      title: 'Third',
+      id: 3,
+      date: 'Wed Jul 30 2022 14:05:20 GMT-0500 (Central Daylight Time)',
+      startTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
+      endTime: 'Wed Jul 27 2022 18:05:20 GMT-0500 (Central Daylight Time)',
+      patient: 3,
+      doctor: 3,
+      treatment: 3,
+      autoSchedule: 'on',
+    },
+  ];
   return (
-    <Box sx={{ mt: 20 }}>
+    <Box>
       <Dialog onClose={handleClose} open={open}>
-        <Form getData={getData} handleClose={handleClose} />
+        <Form handleClose={handleClose} dataInitial={calendar} />
       </Dialog>
-      <Box>
-        <Button variant="contained" onClick={handleClose}>
-          Create Appoiments
-        </Button>
-      </Box>
-      <Box>{data.length == 0 ? 'No data' : data}</Box>
+      <Button variant="contained" color="primary" onClick={handleClose}>
+        Create Appoiment
+      </Button>
     </Box>
   );
 };
-
 export default Index;
