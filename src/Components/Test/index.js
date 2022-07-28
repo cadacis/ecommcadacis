@@ -97,6 +97,14 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
   };
   const handleAuto = (value) => {
     var value_ = value.target.checked;
+
+    const index = appoiments.findIndex(
+      (item) => item.id == currentAppoiment.id,
+    );
+
+    var appoimentsArr = appoiments;
+    appoimentsArr[index] = currentAppoiment;
+    setAppoiments(appoimentsArr);
     setCurrentAppoiment(appoiments[0]);
     setCountSteep(1);
     setAuto(value_);
