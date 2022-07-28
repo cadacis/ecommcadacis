@@ -61,6 +61,7 @@ const Form = (props) => {
   };
   const handleCreate = () => {
     console.log(apoiments);
+    props.getData(apoiments);
     props.handleClose();
   };
   const handleChangeDate = (value) => {
@@ -227,19 +228,27 @@ const Form = (props) => {
 
 const Index = () => {
   const [open, setOpen] = React.useState(false);
+  const [data, setData] = React.useState([]);
   const handleClose = () => {
     setOpen(!open);
+  };
+  const getData = (data) => {
+    var datan = data.map((item, key) => {
+      return JSON.stringify(data);
+    });
+    setData(datan.toString());
   };
   return (
     <Box sx={{ mt: 20 }}>
       <Dialog onClose={handleClose} open={open}>
-        <Form handleClose={handleClose} />
+        <Form getData={getData} handleClose={handleClose} />
       </Dialog>
       <Box>
         <Button variant="contained" onClick={handleClose}>
           Create Appoiments
         </Button>
       </Box>
+      <Box>{data.length == 0 ? 'No data' : data}</Box>
     </Box>
   );
 };
