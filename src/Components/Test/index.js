@@ -130,13 +130,9 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setAuto(value_);
   };
   const handleNext = (value) => {
-    setVisited(visited + 1);
-
     if (countSteep == appoiments.length) {
       return;
     }
-
-    compareHours(currentAppoiment.startTime, currentAppoiment.endTime);
     if (
       !validateField(
         currentAppoiment.date,
@@ -146,7 +142,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     ) {
       return;
     }
-
+    setVisited(visited + 1);
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
@@ -169,6 +165,7 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     ) {
       return;
     }
+
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
