@@ -205,11 +205,9 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     var dayVal = new Date(day);
 
     if (dayVal.getDay() === 0 || dayVal.getDay() === 6) {
-      console.log('error day');
       return false;
     }
     if (shrs > ehrs) {
-      console.log('Inicio Mayor');
       return false;
     }
     if (!compareHours(startHrs, endHrs)) {
