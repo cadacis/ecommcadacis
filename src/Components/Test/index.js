@@ -73,6 +73,15 @@ const Form = ({ dataInitial, handleClose, handleResult }) => {
     setTratamentList(tl);
   };
   const handleCreate = () => {
+    if (
+      !validateField(
+        currentAppoiment.date,
+        currentAppoiment.startTime,
+        currentAppoiment.endTime,
+      )
+    ) {
+      return;
+    }
     const index = appoiments.findIndex(
       (item) => item.id == currentAppoiment.id,
     );
