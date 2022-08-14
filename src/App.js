@@ -42,16 +42,7 @@ var routes = [
   { element: <Error404 />, path: '*' },
 ];
 
-function App() {
-  /*  var dispatch = useDispatch()
-  const getInitialData = ()=>{ dispatch(getCart)}
-
-  React.useEffect(() => {
-    getInitialData()
-    return () => {
-      console.log("Clear Component Function");
-    };
-  }, []); */
+function App() { 
 
   return (
     <div className="App">
